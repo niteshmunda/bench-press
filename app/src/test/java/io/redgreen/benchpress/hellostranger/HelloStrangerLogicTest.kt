@@ -23,6 +23,7 @@ class HelloStrangerLogicTest {
                 )
             )
     }
+
     @Test
     fun `user can delete name`() {
         val userModel = HelloStrangerModel("Janhavi")
