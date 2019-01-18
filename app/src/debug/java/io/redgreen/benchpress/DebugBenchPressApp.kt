@@ -9,7 +9,7 @@ class DebugBenchPressApp : AbstractBenchPressApp() {
   override val initializers: List<Initializer>
     get() = listOf(
       LogEverythingTimberInitializer(),
-      StrictModeInitializer(),
+      // StrictModeInitializer(),
       LeakCanaryInitializer(this)
     )
 }
