@@ -86,12 +86,17 @@ class LoginModelTest {
     @Test
     fun `email should contain dot after @`() {
 
+        val failEmail = "test.test@com"
+        val failLoginModel = LoginModel(failEmail, "")
+
+        assertThat(failLoginModel.isValidEmail)
+            .isFalse()
+
         val email = "test@test.com"
         val loginModel = LoginModel(email, "12345678")
 
         assertThat(loginModel.isValidEmail)
             .isTrue()
     }
-
 
 }

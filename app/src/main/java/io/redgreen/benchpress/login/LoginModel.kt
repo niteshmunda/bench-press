@@ -1,14 +1,19 @@
 package io.redgreen.benchpress.login
 
 import android.support.annotation.VisibleForTesting
+import io.redgreen.benchpress.login.ApiState.*
 
 data class LoginModel(
     val email: String,
-    val password: String
+    val password: String,
+    val apiState: ApiState
 ) {
     companion object {
-        val EMPTY = LoginModel("","")
+        val EMPTY = LoginModel("", "", IDLE)
     }
+
+    // Assigns idle state by default.
+    constructor(email: String, password: String) : this(email, password, IDLE)
 
     val isReadyForLogin: Boolean
         get() = isValidLogin()
@@ -24,7 +29,11 @@ data class LoginModel(
     }
 
     fun inputPassword(password: String): LoginModel {
-        return copy(password=password)
+        return copy(password = password)
+    }
+
+    fun apiCalled(): LoginModel {
+        return copy(email, password, LOADING)
     }
 
     @VisibleForTesting
@@ -39,4 +48,5 @@ data class LoginModel(
 
     @VisibleForTesting
     private fun validPassword() = password.isNotBlank() && password.length >= 8
+
 }

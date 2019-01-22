@@ -1,15 +1,14 @@
 package io.redgreen.benchpress.login
 
 import com.google.common.truth.Truth.assertThat
-import com.spotify.mobius.test.NextMatchers.hasModel
-import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.*
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 
 class LoginLogicTest {
 
-    private val updateSpec = UpdateSpec<LoginModel, LoginEvent, Nothing>(LoginLogic::update)
+    private val updateSpec = UpdateSpec<LoginModel, LoginEvent, LoginEffect>(LoginLogic::update)
 
     @Test
     fun `user can input email`() {
@@ -107,5 +106,20 @@ class LoginLogicTest {
 
         assertThat(yetAnotherInvalidModel.isReadyForLogin)
             .isFalse()
+    }
+
+    @Test
+    fun `login button click sets model to loading state and calls login api`() {
+        val model = LoginModel("valid.email@test.com", "validPassword123")
+        val loading = LoginModel("valid.email@test.com", "validPassword123", ApiState.LOADING)
+
+        updateSpec.given(model)
+            .`when`(AttemptLoginEvent)
+            .then(
+                assertThatNext(
+                    hasModel(loading),
+                    hasEffects(ApiCallEffect as LoginEffect)
+                )
+            )
     }
 }
