@@ -67,7 +67,7 @@ class LoginLogicTest {
     @Test
     fun `when user enters valid email and password, then user can login`() {
         val emptyModel = LoginModel.EMPTY
-        val validMail = "name@companyDomain.com"
+        val validMail = "name@company.com"
         val validPassword = "secretPassword"
 
         val validModel = emptyModel
@@ -83,5 +83,29 @@ class LoginLogicTest {
             )
         assertThat(validModel.isReadyForLogin)
             .isTrue()
+    }
+
+    // This can have combinations of email, password or both
+    @Test
+    fun `when user enters invalid email and password, then user cannot login starting with invalid model`() {
+        val invalidModel = LoginModel("lalal", "1123")
+        val anInvalidEmail = "masdad"
+        val anInvalidPassword = "123"
+
+        val yetAnotherInvalidModel = invalidModel
+            .inputEmail(anInvalidEmail)
+            .inputPassword(anInvalidPassword)
+
+        updateSpec.given(invalidModel)
+            .`when`(InputEmailEvent(anInvalidEmail), InputPasswordEvent(anInvalidPassword))
+            .then(
+                assertThatNext(
+                    hasModel(yetAnotherInvalidModel),
+                    hasNoEffects()
+                )
+            )
+
+        assertThat(yetAnotherInvalidModel.isReadyForLogin)
+            .isFalse()
     }
 }

@@ -19,10 +19,4 @@ object LoginLogic : Update<LoginModel, LoginEvent, Nothing> {
             else -> TODO()
         }
     }
-
-    private fun isLoginModelValid(model: LoginModel): Boolean {
-        return model.email.contains("@") && model.email.contains(".")
-                && model.email.indexOf("@") < model.email.lastIndexOf(".")
-                && model.password.length >= 8
-    }
 }
