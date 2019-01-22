@@ -28,7 +28,7 @@ object LoginLogic : Update<LoginModel, LoginEvent, LoginEffect> {
             )
             is LoginSuccessEvent -> next(
                 model.apiSuccessful(),
-                setOf(SaveTokenEffect)
+                setOf(SaveTokenEffect(event.response.token))
             )
             is LoginFailedEvent -> {
 

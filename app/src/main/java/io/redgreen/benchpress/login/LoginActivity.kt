@@ -7,6 +7,8 @@ import io.reactivex.ObservableTransformer
 import io.redgreen.benchpress.R
 import io.redgreen.benchpress.architecture.android.BaseActivity
 import io.redgreen.benchpress.launchpad.LaunchpadActivity
+import io.redgreen.benchpress.login.api.ApiServiceImpl
+import io.redgreen.benchpress.login.db.RepositoryImpl
 import kotlinx.android.synthetic.main.login_activity.*
 import timber.log.Timber
 
@@ -33,7 +35,7 @@ class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), Login
     }
 
     override fun effectHandler(): ObservableTransformer<LoginEffect, LoginEvent> {
-        return LoginEffectHandler.create(this)
+        return LoginEffectHandler.create(this, ApiServiceImpl(), RepositoryImpl())
     }
 
     companion object {
