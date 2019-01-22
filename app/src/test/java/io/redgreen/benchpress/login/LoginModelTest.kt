@@ -64,19 +64,19 @@ class LoginModelTest {
     }
 
     @Test
-    fun `password should contain @`() {
+    fun `email should contain @`() {
 
-        val password = "testpassword123"
-        val loginModel = LoginModel("", password)
+        val email = "test.email.123"
+        val loginModel = LoginModel(email, "")
 
-        assertThat(loginModel.isValidPassword)
+        assertThat(loginModel.isValidEmail)
             .isFalse()
     }
 
     @Test
     fun `password length cannot be less than 8`() {
 
-        val password = "test1234"
+        val password = "test123"
         val loginModel = LoginModel("", password)
 
         assertThat(loginModel.isValidPassword)
