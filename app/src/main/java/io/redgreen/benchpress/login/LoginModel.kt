@@ -9,7 +9,7 @@ data class LoginModel(
     }
 
     val isReadyForLogin: Boolean
-        get() = false
+        get() = isValidLogin()
 
     fun inputEmail(email: String): LoginModel {
         return copy(email = email)
@@ -17,5 +17,11 @@ data class LoginModel(
 
     fun inputPassword(password: String): LoginModel {
         return copy(password=password)
+    }
+
+    private fun isValidLogin(): Boolean {
+        return (email.contains("@") && email.contains(".")
+                && email.indexOf("@") < email.lastIndexOf(".")
+                && password.length >= 8)
     }
 }

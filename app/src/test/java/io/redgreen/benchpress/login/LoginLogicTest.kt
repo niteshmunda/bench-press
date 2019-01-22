@@ -74,7 +74,7 @@ class LoginLogicTest {
             .inputEmail(validMail)
             .inputPassword(validPassword)
         updateSpec.given(emptyModel)
-            .`when`(InputEmailEvent(validMail),InputPasswordEvent(validPassword))
+            .`when`(InputEmailEvent(validMail), InputPasswordEvent(validPassword))
             .then(
                 assertThatNext(
                     hasModel(validModel),
