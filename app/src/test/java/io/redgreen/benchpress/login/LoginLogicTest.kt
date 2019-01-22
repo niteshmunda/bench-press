@@ -137,7 +137,7 @@ class LoginLogicTest {
             .then(
                 assertThatNext(
                     hasModel(successModel),
-                    hasEffects(SaveTokenEffect as LoginEffect)
+                    hasEffects(SaveTokenEffect("token") as LoginEffect)
                 )
             )
     }
