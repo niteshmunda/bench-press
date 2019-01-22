@@ -10,6 +10,9 @@ class LoginLogicTest {
 
     private val updateSpec = UpdateSpec<LoginModel, LoginEvent, LoginEffect>(LoginLogic::update)
 
+    private val validEmail = "valid.email@test.com"
+    private val validPassword = "validPassword123"
+
     @Test
     fun `user can input email`() {
         val emptyModel = LoginModel.EMPTY
@@ -66,14 +69,13 @@ class LoginLogicTest {
     @Test
     fun `when user enters valid email and password, then user can login`() {
         val emptyModel = LoginModel.EMPTY
-        val validMail = "name@company.com"
-        val validPassword = "secretPassword"
 
         val validModel = emptyModel
-            .inputEmail(validMail)
+            .inputEmail(validEmail)
             .inputPassword(validPassword)
+
         updateSpec.given(emptyModel)
-            .`when`(InputEmailEvent(validMail), InputPasswordEvent(validPassword))
+            .`when`(InputEmailEvent(validEmail), InputPasswordEvent(validPassword))
             .then(
                 assertThatNext(
                     hasModel(validModel),
@@ -96,8 +98,10 @@ class LoginLogicTest {
             .inputPassword(anInvalidPassword)
 
         updateSpec.given(invalidModel)
-            .`when`(InputEmailEvent(anInvalidEmail), InputPasswordEvent(anInvalidPassword))
-            .then(
+            .whenEvents(
+                InputEmailEvent(anInvalidEmail),
+                InputPasswordEvent(anInvalidPassword)
+            ).then(
                 assertThatNext(
                     hasModel(yetAnotherInvalidModel),
                     hasNoEffects()
@@ -109,16 +113,31 @@ class LoginLogicTest {
     }
 
     @Test
-    fun `login button click sets model to loading state and calls login api`() {
-        val model = LoginModel("valid.email@test.com", "validPassword123")
-        val loading = LoginModel("valid.email@test.com", "validPassword123", ApiState.LOADING)
+    fun `user can click on login button`() {
+        val model = LoginModel(validEmail, validPassword) // valid model
+        val loading = LoginModel(validEmail, validPassword, ApiState.LOADING) // valid model in loading state.
 
         updateSpec.given(model)
             .`when`(AttemptLoginEvent)
             .then(
                 assertThatNext(
                     hasModel(loading),
-                    hasEffects(ApiCallEffect as LoginEffect)
+                    hasEffects(ApiCallEffect(LoginRequest(validEmail, validPassword)) as LoginEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `when api is successful`() {
+        val model = LoginModel(validEmail, validPassword, ApiState.LOADING) // In loading state
+        val successModel = LoginModel(validEmail, validPassword, ApiState.SUCCESS)
+
+        updateSpec.given(model)
+            .`when`(LoginSuccessEvent(LoginResponse("token")))
+            .then(
+                assertThatNext(
+                    hasModel(successModel),
+                    hasEffects(SaveTokenEffect as LoginEffect)
                 )
             )
     }

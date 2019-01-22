@@ -13,7 +13,11 @@ object LoginLogic : Update<LoginModel, LoginEvent, LoginEffect> {
 
             is InputEmailEvent -> next(model.inputEmail(event.email))
             is InputPasswordEvent -> next(model.inputPassword(event.password))
-            is AttemptLoginEvent -> next(model.apiCalled(), setOf(ApiCallEffect))
+            is AttemptLoginEvent -> next(
+                model.apiCalled(),
+                setOf(ApiCallEffect(LoginRequest(model.email, model.password)))
+            )
+            is LoginSuccessEvent -> next(model.apiSuccessful(), setOf(SaveTokenEffect))
 
             else -> TODO()
         }

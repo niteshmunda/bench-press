@@ -33,7 +33,11 @@ data class LoginModel(
     }
 
     fun apiCalled(): LoginModel {
-        return copy(email, password, LOADING)
+        return copy(email = email, password = password, apiState = LOADING)
+    }
+
+    fun apiSuccessful(): LoginModel {
+        return copy(email = email, password = password, apiState = SUCCESS)
     }
 
     @VisibleForTesting
