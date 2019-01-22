@@ -40,6 +40,14 @@ data class LoginModel(
         return copy(email = email, password = password, apiState = SUCCESS)
     }
 
+    fun apiError(): LoginModel {
+        return copy(email = email, password = password, apiState = FAIL)
+    }
+
+    fun authError(): LoginModel {
+        return copy(email = "", password = "", apiState = IDLE)
+    }
+
     @VisibleForTesting
     private fun isValidLogin(): Boolean {
         return (validEmail()

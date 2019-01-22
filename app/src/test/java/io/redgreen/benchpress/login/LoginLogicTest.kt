@@ -44,7 +44,7 @@ class LoginLogicTest {
     }
 
     @Test
-    fun `when user enters invalid email and password, then user cannot login`() {
+    fun `when user enters invalid email and password, then user cannot press login button`() {
         val emptyModel = LoginModel.EMPTY
         val anInvalidEmail = "masdad"
         val anInvalidPassword = "123"
@@ -67,7 +67,7 @@ class LoginLogicTest {
     }
 
     @Test
-    fun `when user enters valid email and password, then user can login`() {
+    fun `when user enters valid email and password, then user can press login button`() {
         val emptyModel = LoginModel.EMPTY
 
         val validModel = emptyModel
@@ -113,7 +113,7 @@ class LoginLogicTest {
     }
 
     @Test
-    fun `user can click on login button`() {
+    fun `user can click on login button with valid credentials`() {
         val model = LoginModel(validEmail, validPassword) // valid model
         val loading = LoginModel(validEmail, validPassword, ApiState.LOADING) // valid model in loading state.
 
@@ -128,7 +128,7 @@ class LoginLogicTest {
     }
 
     @Test
-    fun `when api is successful`() {
+    fun `when login api is successful token is saved`() {
         val model = LoginModel(validEmail, validPassword, ApiState.LOADING) // In loading state
         val successModel = LoginModel(validEmail, validPassword, ApiState.SUCCESS)
 
@@ -140,5 +140,50 @@ class LoginLogicTest {
                     hasEffects(SaveTokenEffect as LoginEffect)
                 )
             )
+    }
+
+    @Test
+    fun `when login api fails with invalid credentials we clear fields`() {
+        val model = LoginModel(validEmail, validPassword, ApiState.LOADING) // In loading state
+        updateSpec.given(model)
+            .`when`(LoginFailedEvent(NetworkError.AUTH_ERROR))
+            .then(
+                assertThatNext(
+                    hasModel(LoginModel.EMPTY),
+                    hasEffects(ClearFieldsEffect as LoginEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `when login api fails with network error we show retry`() {
+        val model = LoginModel(validEmail, validPassword, ApiState.LOADING) // In loading state
+        updateSpec.given(model)
+            .`when`(LoginFailedEvent(NetworkError.TIMEOUT))
+            .then(
+                assertThatNext(
+                    hasModel(model.apiError()),
+                    hasEffects(RetryEffect as LoginEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `when token is saved user goes to home screen`() {
+        val model = LoginModel(validEmail, validPassword, ApiState.SUCCESS)
+
+        updateSpec.given(model)
+            .`when`(SaveTokenEvent)
+            .then(
+                assertThatNext(
+                    hasModel(model),
+                    hasEffects(NaviagteEffect(NavigateTo.HOME) as LoginEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `user can retry save token`() {
+        //
     }
 }
