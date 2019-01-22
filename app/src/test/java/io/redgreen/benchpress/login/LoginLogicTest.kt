@@ -177,7 +177,7 @@ class LoginLogicTest {
             .then(
                 assertThatNext(
                     hasModel(model),
-                    hasEffects(NaviagteEffect(NavigateTo.HOME) as LoginEffect)
+                    hasEffects(NavigateEffect(NavigateTo.HOME) as LoginEffect)
                 )
             )
     }

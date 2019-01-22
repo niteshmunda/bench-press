@@ -24,7 +24,7 @@ object LoginLogic : Update<LoginModel, LoginEvent, LoginEffect> {
 
             is SaveTokenEvent -> next(
                 model,
-                setOf(NaviagteEffect(NavigateTo.HOME))
+                setOf(NavigateEffect(NavigateTo.HOME))
             )
             is LoginSuccessEvent -> next(
                 model.apiSuccessful(),

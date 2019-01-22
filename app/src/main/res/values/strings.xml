@@ -22,4 +22,5 @@
 
   <string name="image_picker_title">Image Picker (TODO)</string>
   <string name="quiz_title">Quiz (TODO)</string>
+    <string name="network_error">There is something wrong with network, please check your internet</string>
 </resources>

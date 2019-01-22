@@ -1,13 +1,16 @@
 package io.redgreen.benchpress.login
 
+import android.os.Parcelable
 import android.support.annotation.VisibleForTesting
 import io.redgreen.benchpress.login.ApiState.*
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class LoginModel(
     val email: String,
     val password: String,
     val apiState: ApiState
-) {
+) : Parcelable {
     companion object {
         val EMPTY = LoginModel("", "", IDLE)
     }
