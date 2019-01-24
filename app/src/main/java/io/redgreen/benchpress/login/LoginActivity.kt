@@ -2,10 +2,13 @@ package io.redgreen.benchpress.login
 
 import android.content.Context
 import android.content.Intent
+import android.text.Editable
+import android.view.View
 import com.spotify.mobius.Next
 import io.reactivex.ObservableTransformer
 import io.redgreen.benchpress.R
 import io.redgreen.benchpress.architecture.android.BaseActivity
+import io.redgreen.benchpress.architecture.android.listener.TextWatcherAdapter
 import io.redgreen.benchpress.launchpad.LaunchpadActivity
 import io.redgreen.benchpress.login.api.ApiServiceImpl
 import io.redgreen.benchpress.login.db.RepositoryImpl
@@ -19,7 +22,19 @@ class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), Login
     }
 
     override fun setup() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        emailEditText.addTextChangedListener(object : TextWatcherAdapter() {
+            override fun afterTextChanged(s: Editable) {
+                eventSource.notifyEvent(InputEmailEvent(s.toString()))
+            }
+        })
+        passwordEditText.addTextChangedListener(object : TextWatcherAdapter() {
+            override fun afterTextChanged(s: Editable) {
+                eventSource.notifyEvent(InputPasswordEvent(s.toString()))
+            }
+        })
+        loginButton.setOnClickListener {
+            eventSource.notifyEvent(AttemptLoginEvent)
+        }
     }
 
     override fun initialModel(): LoginModel {
@@ -31,7 +46,28 @@ class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), Login
     }
 
     override fun render(model: LoginModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        // Enable button only when both the credentials are correct.
+        loginButton.isEnabled = model.isReadyForLogin
+        loginButton.isClickable = model.isReadyForLogin
+
+        emailTextInputLayout.error = if (model.isValidEmail) {
+            null
+        } else {
+            getString(R.string.invalid_email)
+        }
+
+        passwordTextInputLayout.error = if (model.isValidPassword) {
+            null
+        } else {
+            getString(R.string.invalid_password)
+        }
+
+        authenticationProgressBar.visibility = if (model.apiState == ApiState.LOADING) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 
     override fun effectHandler(): ObservableTransformer<LoginEffect, LoginEvent> {
@@ -45,7 +81,6 @@ class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), Login
     }
 
     override fun navigateToHome() {
-        // no-op
         Timber.i("Navigating to home screen")
         LaunchpadActivity.start(this)
     }
