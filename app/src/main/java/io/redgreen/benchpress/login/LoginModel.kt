@@ -27,6 +27,14 @@ data class LoginModel(
     val isValidPassword: Boolean
         get() = validPassword()
 
+    val showPasswordError: Boolean
+        get() = password.length in 1..7
+
+    // TODO : Find better way to do this
+    val showEmailError: Boolean
+        get() = email.length > 1 && !(email.contains("@") && email.contains(".")
+                && email.indexOf("@") < email.lastIndexOf("."))
+
     fun inputEmail(email: String): LoginModel {
         return copy(email = email)
     }

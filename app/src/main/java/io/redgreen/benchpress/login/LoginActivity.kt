@@ -51,16 +51,16 @@ class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), Login
         loginButton.isEnabled = model.isReadyForLogin
         loginButton.isClickable = model.isReadyForLogin
 
-        emailTextInputLayout.error = if (model.isValidEmail) {
-            null
-        } else {
+        emailTextInputLayout.error = if (model.showEmailError) {
             getString(R.string.invalid_email)
+        } else {
+            null
         }
 
-        passwordTextInputLayout.error = if (model.isValidPassword) {
-            null
-        } else {
+        passwordTextInputLayout.error = if (model.showPasswordError) {
             getString(R.string.invalid_password)
+        } else {
+            null
         }
 
         authenticationProgressBar.visibility = if (model.apiState == ApiState.LOADING) {
