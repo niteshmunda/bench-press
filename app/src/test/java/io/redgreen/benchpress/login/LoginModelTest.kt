@@ -99,4 +99,36 @@ class LoginModelTest {
             .isTrue()
     }
 
+    @Test
+    fun `error is shown when email is invalid`() {
+        val failEmail = "failMe"
+        val failLoginModel = LoginModel(failEmail, "")
+
+        assertThat(failLoginModel.showEmailError)
+            .isTrue()
+
+        val failEmail2 = "fail.ee@maon"
+        val failLoginModel2 = LoginModel(failEmail2, "")
+
+        assertThat(failLoginModel2.showEmailError)
+            .isTrue()
+    }
+
+    @Test
+    fun `error is shown when password is invalid`() {
+        val failPass = "failMe"
+        val failLoginModel = LoginModel("", failPass)
+
+        assertThat(failLoginModel.showPasswordError)
+            .isTrue()
+    }
+
+    @Test
+    fun `there is no error when fields are blank`() {
+        val model = LoginModel("", "")
+
+        assertThat(model.showEmailError).isFalse()
+        assertThat(model.showPasswordError).isFalse()
+    }
+
 }
