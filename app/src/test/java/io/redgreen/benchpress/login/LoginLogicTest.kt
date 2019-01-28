@@ -173,7 +173,7 @@ class LoginLogicTest {
         val model = LoginModel(validEmail, validPassword, ApiState.SUCCESS)
 
         updateSpec.given(model)
-            .`when`(SaveTokenEvent)
+            .`when`(TokenSavedEvent)
             .then(
                 assertThatNext(
                     hasModel(model),
@@ -184,6 +184,15 @@ class LoginLogicTest {
 
     @Test
     fun `user can retry save token`() {
-        //
+        val model = LoginModel(validEmail, validPassword, ApiState.SUCCESS)
+
+        updateSpec.given(model)
+            .`when`(RetryEvent("token"))
+            .then(
+                assertThatNext(
+                    hasModel(model),
+                    hasEffects(SaveTokenEffect("token") as LoginEffect)
+                )
+            )
     }
 }

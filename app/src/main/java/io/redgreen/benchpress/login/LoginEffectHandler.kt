@@ -3,25 +3,40 @@ package io.redgreen.benchpress.login
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import io.redgreen.benchpress.login.db.Repository
+import io.redgreen.benchpress.login.schedulers.AppSchedulers
 
 object LoginEffectHandler {
 
     fun create(
         action: LoginActions,
         api: ApiService,
-        db: Repository
-    )
-            : ObservableTransformer<LoginEffect, LoginEvent> {
+        db: Repository,
+        scheduler : AppSchedulers
+    ): ObservableTransformer<LoginEffect, LoginEvent> {
         return RxMobius.subtypeEffectHandler<LoginEffect, LoginEvent>()
-            .addConsumer(SaveTokenEffect::class.java) { db.saveToken() }
             .addAction(NavigateEffect::class.java, action::navigateToHome)
             .addAction(ClearFieldsEffect::class.java, action::clearFields)
-            .addAction(RetryEffect::class.java, action::retry)
+            .addAction(RetryEffect::class.java, action::retry, scheduler.main())
+            .addTransformer(SaveTokenEffect::class.java, this.saveToDb(db))
             .addTransformer(
                 ApiCallEffect::class.java,
                 login(api)
             )
             .build()
+    }
+
+    private fun saveToDb(db: Repository): ObservableTransformer<SaveTokenEffect, LoginEvent> {
+        return ObservableTransformer {
+            it.flatMapSingle { effect ->
+                db.saveToken(effect.token).map<LoginEvent> { success ->
+                    if (success) {
+                        TokenSavedEvent
+                    } else {
+                        RetryEvent(effect.token)
+                    }
+                }
+            }
+        }
     }
 
     private fun login(api: ApiService): ObservableTransformer<ApiCallEffect, LoginEvent> {

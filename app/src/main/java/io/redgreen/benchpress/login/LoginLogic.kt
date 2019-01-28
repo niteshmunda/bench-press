@@ -32,8 +32,8 @@ object LoginLogic : Update<LoginModel, LoginEvent, LoginEffect> {
                 )
             }
 
-            is SaveTokenEvent -> {
-                Timber.i("SaveTokenEvent")
+            is TokenSavedEvent -> {
+                Timber.i("TokenSavedEvent")
                 next(
                     model,
                     setOf(NavigateEffect(NavigateTo.HOME))
@@ -60,6 +60,13 @@ object LoginLogic : Update<LoginModel, LoginEvent, LoginEffect> {
                     )
                     else -> next<LoginModel, LoginEffect>(model.authError())
                 }
+            }
+            is RetryEvent -> {
+                Timber.i("RetryEvent")
+                next(
+                    model,
+                    setOf(SaveTokenEffect(event.token))
+                )
             }
             else -> TODO()
         }

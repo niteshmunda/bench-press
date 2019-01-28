@@ -12,6 +12,7 @@ import io.redgreen.benchpress.architecture.android.listener.TextWatcherAdapter
 import io.redgreen.benchpress.launchpad.LaunchpadActivity
 import io.redgreen.benchpress.login.api.ApiServiceImpl
 import io.redgreen.benchpress.login.db.RepositoryImpl
+import io.redgreen.benchpress.login.schedulers.AppSchedulersImpl
 import kotlinx.android.synthetic.main.login_activity.*
 import timber.log.Timber
 
@@ -71,7 +72,7 @@ class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), Login
     }
 
     override fun effectHandler(): ObservableTransformer<LoginEffect, LoginEvent> {
-        return LoginEffectHandler.create(this, ApiServiceImpl(), RepositoryImpl())
+        return LoginEffectHandler.create(this, ApiServiceImpl(), RepositoryImpl(), AppSchedulersImpl())
     }
 
     companion object {
@@ -89,10 +90,12 @@ class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), Login
         Timber.i("Clearing fields")
         emailEditText.setText("")
         passwordEditText.setText("")
+        loginButton.text = getString(R.string.login_text)
     }
 
     override fun retry() {
         Timber.i("Network call failed due to api call")
         subheaderTextView.setText(R.string.network_error)
+        loginButton.text = getString(R.string.login_retry)
     }
 }

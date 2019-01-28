@@ -25,4 +25,6 @@
     <string name="network_error">There is something wrong with network, please check your internet</string>
     <string name="invalid_email">Email is Invalid</string>
   <string name="invalid_password">Password Invalid</string>
+    <string name="login_retry">Retry</string>
+    <string name="login_text">Log In</string>
 </resources>
