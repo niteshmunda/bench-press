@@ -48,7 +48,7 @@ class LoginEffectHandlerTest {
 
         // Simulate failed api response.
         whenever(apiMock.login(LoginRequest(email, password)))
-            .thenReturn(Single.error {
+            .thenReturn(Single.error {ClearFieldsEffect
                 throw Error("Timeout")
             })
 
@@ -98,6 +98,8 @@ class LoginEffectHandlerTest {
 
         loginEffectHandlerTest.
             dispatchEffect(ClearFieldsEffect)
+
+        loginEffectHandlerTest.assertNoOutgoingEvents()
 
         verify(actionMock).clearFields()
     }
