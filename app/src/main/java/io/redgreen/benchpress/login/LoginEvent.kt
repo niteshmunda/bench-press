@@ -1,8 +1,5 @@
 package io.redgreen.benchpress.login
 
-
-
-
 sealed class LoginEvent
 
 data class InputEmailEvent(val email: String) : LoginEvent()
