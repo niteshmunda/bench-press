@@ -2,6 +2,7 @@ package io.redgreen.benchpress.login
 
 import android.content.Context
 import android.content.Intent
+import android.support.annotation.StringRes
 import android.text.Editable
 import android.view.View
 import com.spotify.mobius.Next
@@ -16,7 +17,11 @@ import io.redgreen.benchpress.login.schedulers.AppSchedulersImpl
 import kotlinx.android.synthetic.main.login_activity.*
 import timber.log.Timber
 
-class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), LoginActions {
+class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), LoginActions, LoginView {
+
+    private val renderer by lazy(LazyThreadSafetyMode.NONE) {
+        LoginViewRenderer(this)
+    }
 
     override fun layoutResId(): Int {
         return R.layout.login_activity
@@ -47,28 +52,7 @@ class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), Login
     }
 
     override fun render(model: LoginModel) {
-
-        // Enable button only when both the credentials are correct.
-        loginButton.isEnabled = model.isReadyForLogin
-        loginButton.isClickable = model.isReadyForLogin
-
-        emailTextInputLayout.error = if (model.showEmailError) {
-            getString(R.string.invalid_email)
-        } else {
-            null
-        }
-
-        passwordTextInputLayout.error = if (model.showPasswordError) {
-            getString(R.string.invalid_password)
-        } else {
-            null
-        }
-
-        authenticationProgressBar.visibility = if (model.apiState == ApiState.LOADING) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+        renderer.render(model)
     }
 
     override fun effectHandler(): ObservableTransformer<LoginEffect, LoginEvent> {
@@ -97,5 +81,39 @@ class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), Login
         Timber.i("Network call failed due to api call")
         subheaderTextView.setText(R.string.network_error)
         loginButton.text = getString(R.string.login_retry)
+    }
+
+    override fun enableLogin() {
+        loginButton.isEnabled = true
+        loginButton.isClickable = true
+    }
+
+    override fun disableLogin() {
+        loginButton.isEnabled = false
+        loginButton.isClickable = false
+    }
+
+    override fun showEmailError(@StringRes error: Int) {
+        emailTextInputLayout.error = getString(error)
+    }
+
+    override fun showPasswordError(@StringRes error: Int) {
+        passwordTextInputLayout.error = getString(error)
+    }
+
+    override fun hideEmailError() {
+        emailTextInputLayout.error = null
+    }
+
+    override fun hidePasswordError() {
+        passwordTextInputLayout.error = null
+    }
+
+    override fun showProgressbar() {
+        authenticationProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressbar() {
+        authenticationProgressBar.visibility = View.GONE
     }
 }
