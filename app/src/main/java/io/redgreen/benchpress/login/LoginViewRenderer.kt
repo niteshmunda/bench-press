@@ -2,6 +2,9 @@ package io.redgreen.benchpress.login
 
 import io.redgreen.benchpress.R
 
+/**
+ * Rendering logic for login page is encompassed here.
+ */
 class LoginViewRenderer(
     private val loginView: LoginView
 ) {
