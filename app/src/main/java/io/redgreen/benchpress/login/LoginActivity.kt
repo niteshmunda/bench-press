@@ -17,7 +17,7 @@ import io.redgreen.benchpress.login.schedulers.AppSchedulersImpl
 import kotlinx.android.synthetic.main.login_activity.*
 import timber.log.Timber
 
-class LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), LoginActions, LoginView {
+class  LoginActivity : BaseActivity<LoginModel, LoginEvent, LoginEffect>(), LoginActions, LoginView {
 
     private val renderer by lazy(LazyThreadSafetyMode.NONE) {
         LoginViewRenderer(this)

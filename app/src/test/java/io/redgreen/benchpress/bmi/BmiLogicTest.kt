@@ -10,15 +10,15 @@ class BmiLogicTest{
     private val updateSpec = UpdateSpec<BmiModel, BmiEvent, Nothing>(BmiLogic::update)
 
     @Test
-    fun `when user slides the height seekbar`(){
-        val normalModel = BmiModel.DEFAULT
-//        val height = 1.80
+    fun `when user can change the height`(){
+        val defaultModel = BmiModel.DEFAULT
+        val randomHeight = 180.0F
         updateSpec
-            .given(normalModel)
-            .`when`(HeightChangeEvent(height))
+            .given(defaultModel)
+            .`when`(HeightChangeEvent(randomHeight))
             .then(
                 assertThatNext(
-                    hasModel(normalModel.heightChange(height)),
+                    hasModel(defaultModel.heightChange(randomHeight)),
                     hasNoEffects()
                 )
             )
@@ -26,30 +26,32 @@ class BmiLogicTest{
     }
 
     @Test
-    fun `when user slides the weight seekbar`(){
-        val normalModel = BmiModel.DEFAULT
-        val weight = 72
+    fun `when user can change the weight`(){
+        val defaultModel = BmiModel.DEFAULT
+        val randomWeight = 74.0F
+
         updateSpec
-            .given(normalModel)
-            .`when`(WeightChangeEvent(weight))
+            .given(defaultModel)
+            .`when`(WeightChangeEvent(randomWeight))
             .then(
                 assertThatNext(
-                    hasModel(normalModel.weightChange(weight)),
+                    hasModel(defaultModel.weightChange(randomWeight)),
                     hasNoEffects()
                 )
             )
     }
 
     @Test
-    fun `when user changes unit to si unit from non si unit`(){
-        val normalModel = BmiModel.DEFAULT
+    fun `when user can change unit system`(){
+        val defaultModel = BmiModel.DEFAULT
+        val randomUnit = MeasurementType.IMPERIAL
 
         updateSpec
-            .given(normalModel)
-            .`when`(UnitChangeEvent)
+            .given(defaultModel)
+            .`when`(UnitChangeEvent(randomUnit))
             .then(
                 assertThatNext(
-                    hasModel(normalModel.unitChange()),
+                    hasModel(defaultModel.unitChange(randomUnit)),
                     hasNoEffects()
                 )
             )
