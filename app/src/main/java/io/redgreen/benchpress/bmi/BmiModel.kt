@@ -2,94 +2,71 @@ package io.redgreen.benchpress.bmi
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import java.nio.channels.FileLock
+
+// 1. Use computed properties.
+// 2. Model should always use a 'val'.
+// 3. Min / max height and weight should be set from resources file (use an integer resource). (i.e.) Use a single configuration source.
+// 4. Clean up primitive obsession on weight and height. (Thereby resolving the precision loss problem that we have now.)
 
 @Parcelize
 data class BmiModel(
     var height: Float,
     var weight: Float,
-    var bmi: Float,
-    var measurementType: MeasurementType,
-    var weightCategory: WeightCategory? = null
+    var measurementType: MeasurementType
 ) : Parcelable {
     companion object {
-        val ZERO = BmiModel(
-            height = 0F,
-            weight = 0F,
-            bmi = 0F,
-            measurementType = MeasurementType.METRIC,
-            weightCategory = null
-        )
-
         val DEFAULT = BmiModel(
-            height = 182.50F,
-            weight = 80.0F,
-            bmi = 24.0F,
-            measurementType = MeasurementType.METRIC,
-            weightCategory = WeightCategory.NORMAL_WEIGHT
+            height = 160.0F,
+            weight = 48.0F,
+            measurementType = MeasurementType.METRIC
         )
     }
 
-    fun calculateBMI(height : Float,weight : Float, measurementType : MeasurementType) : Float{
-
-        var bmi = if (measurementType == MeasurementType.METRIC) {
-            ((weight / (height * height) * 10000))
-        } else {
-            ((weight / (height * height) * 10000)) * 703
-        }
+    fun getBmi(): Float {
+        var bmi = ((weight / (height * height) * 10000))
         val factor = Math.pow(10.0, 2.0)
         bmi = (Math.round(bmi * factor) / factor).toFloat()
-
-        weightCategory = calculateWeightCatagory(bmi)
         return bmi
     }
 
-    fun calculateWeightCatagory(bmi : Float) : WeightCategory{
-        var weightCategory = when {
-            bmi <= 18.5 -> WeightCategory.UNDERWEIGHT
-            bmi > 18.5 && bmi <= 25 -> WeightCategory.NORMAL_WEIGHT
-            bmi > 25 && bmi < 30 -> WeightCategory.OVER_WEIGHT
-            else -> WeightCategory.OBESE
+    fun getWeightCategory(): String {
+        val bmi = getBmi()
+        return when {
+            bmi <= 18.5 -> WeightCategory.UNDERWEIGHT.category
+            bmi > 18.5 && bmi <= 25 -> WeightCategory.NORMAL_WEIGHT.category
+            bmi > 25 && bmi < 30 -> WeightCategory.OVER_WEIGHT.category
+            else -> WeightCategory.OBESE.category
         }
-        return weightCategory
     }
 
-    fun changeHeightUnit(measurementType: MeasurementType) : Float{
-       if (measurementType == MeasurementType.IMPERIAL){
-            val factor = 2.54F
-           height /= factor
-        }
-        else {
-            val factor = 2.54F
-            height *= factor
-       }
-
+    fun getTheHeight(): Float {
         val factor = Math.pow(10.0, 2.0)
-        height = (Math.round(height * factor) / factor).toFloat()
-        return this.height
+        return if (measurementType == MeasurementType.METRIC) {
+            (Math.round(height * factor) / factor).toFloat()
+        } else {
+            (Math.round((height / 2.54F) * factor) / factor).toFloat()
+        }
     }
-    fun changeWeightUnit(measurementType: MeasurementType) : Float{
-        if (measurementType == MeasurementType.IMPERIAL){
-            val factor = 2.205F
-            weight *= factor
-        }
-        else{
-            weight /= 2.205F
-        }
+
+    fun getTheWeight(): Float {
         val factor = Math.pow(10.0, 2.0)
-        weight = (Math.round(weight * factor) / factor).toFloat()
-        return this.weight
-    }
-    fun heightChange(height: Float): BmiModel {
-        return copy(height = height,bmi = calculateBMI(height,weight,measurementType))
-    }
-
-    fun weightChange(weight: Float): BmiModel {
-        return copy(weight = weight,bmi = calculateBMI(height,weight,measurementType))
+        return if(measurementType == MeasurementType.METRIC) {
+            (Math.round(weight * factor) / factor).toFloat()
+        } else {
+            (Math.round((weight * 2.20F) * factor) / factor).toFloat()
+        }
     }
 
-    fun unitChange(measurementType: MeasurementType): BmiModel {
-        return copy(measurementType = measurementType,height = changeHeightUnit(measurementType), weight = changeWeightUnit(measurementType))
+    fun changeHeight(height: Float): BmiModel {
+        return copy(height = height)
     }
+
+    fun changeWeight(weight: Float): BmiModel {
+        return copy(weight = weight)
+    }
+
+    fun changeUnit(measurementType: MeasurementType): BmiModel {
+        return copy(measurementType = measurementType)
+    }
+
 }
-

@@ -6,11 +6,11 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 
-class BmiLogicTest{
+class BmiLogicTest {
     private val updateSpec = UpdateSpec<BmiModel, BmiEvent, Nothing>(BmiLogic::update)
 
     @Test
-    fun `when user can change the height`(){
+    fun `user can change height`() {
         val defaultModel = BmiModel.DEFAULT
         val randomHeight = 180.0F
         updateSpec
@@ -18,15 +18,14 @@ class BmiLogicTest{
             .`when`(HeightChangeEvent(randomHeight))
             .then(
                 assertThatNext(
-                    hasModel(defaultModel.heightChange(randomHeight)),
+                    hasModel(defaultModel.changeHeight(randomHeight)),
                     hasNoEffects()
                 )
             )
-
     }
 
     @Test
-    fun `when user can change the weight`(){
+    fun `user can change weight`() {
         val defaultModel = BmiModel.DEFAULT
         val randomWeight = 74.0F
 
@@ -35,14 +34,14 @@ class BmiLogicTest{
             .`when`(WeightChangeEvent(randomWeight))
             .then(
                 assertThatNext(
-                    hasModel(defaultModel.weightChange(randomWeight)),
+                    hasModel(defaultModel.changeWeight(randomWeight)),
                     hasNoEffects()
                 )
             )
     }
 
     @Test
-    fun `when user can change unit system`(){
+    fun `user can change unit system`() {
         val defaultModel = BmiModel.DEFAULT
         val randomUnit = MeasurementType.IMPERIAL
 
@@ -51,7 +50,7 @@ class BmiLogicTest{
             .`when`(UnitChangeEvent(randomUnit))
             .then(
                 assertThatNext(
-                    hasModel(defaultModel.unitChange(randomUnit)),
+                    hasModel(defaultModel.changeUnit(randomUnit)),
                     hasNoEffects()
                 )
             )

@@ -11,13 +11,13 @@ object BmiLogic : Update<BmiModel, BmiEvent, Nothing> {
     ): Next<BmiModel, Nothing> {
         return when (event) {
             is HeightChangeEvent -> {
-                next(model.heightChange(event.height))
+                next(model.changeHeight(event.height))
             }
             is WeightChangeEvent -> {
-                next(model.weightChange(event.weight))
+                next(model.changeWeight(event.weight))
             }
             is UnitChangeEvent -> {
-                next(model.unitChange(event.measurementType))
+                next(model.changeUnit(event.measurementType))
             }
             else -> TODO()
         }

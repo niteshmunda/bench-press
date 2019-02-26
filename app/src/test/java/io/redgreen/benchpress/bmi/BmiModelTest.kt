@@ -3,75 +3,77 @@ package io.redgreen.benchpress.bmi
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
+// Try to clarify test names
+
 class BmiModelTest {
 
     @Test
-    fun `when weight is default unit changing it makes weight equal to 88 units`() {
-        val zeroModel = BmiModel.ZERO
+    fun `when weight is updated, its property is updated`() {
+        val defaultModel = BmiModel.DEFAULT
         val weight = 88.0F
-        val weightModel = BmiModel(0F, 88.0F, 0F, MeasurementType.METRIC, null)
+        val updatedWeightModel = defaultModel.changeWeight(weight)
 
-        assertThat(zeroModel.weightChange(weight).weight)
-            .isEqualTo(weightModel.weight)
+        assertThat(updatedWeightModel.weight)
+            .isEqualTo(weight)
     }
 
     @Test
-    fun `when height is default unit changing it makes height equal to 180 units`() {
-        val zeroModel = BmiModel.ZERO
+    fun `when height is updated, its property is updated`() {
+        val defaultModel = BmiModel.DEFAULT
         val height = 180.0F
-        val heightModel = BmiModel(180.0F,0F,0F,MeasurementType.METRIC,null)
+        val updatedHeightModel = BmiModel(180.0F,0F,MeasurementType.METRIC)
 
-        assertThat(zeroModel.heightChange(height).height)
-            .isEqualTo(heightModel.height)
+        assertThat(defaultModel.changeHeight(height).height)
+            .isEqualTo(updatedHeightModel.height)
     }
 
     @Test
-    fun `when unit is changed from meteric to imperial units`() {
-        val zeroMode = BmiModel.ZERO
+    fun `when unit is updated from metric to imperial`() {
+        val defaultMode = BmiModel.DEFAULT
         val unit = MeasurementType.IMPERIAL
-        val unitModel = BmiModel(0F,0F,0F,MeasurementType.IMPERIAL,null)
+        val updatedUnitModel = BmiModel(0F,0F,MeasurementType.IMPERIAL)
 
-        assertThat(zeroMode.unitChange(unit).measurementType)
-            .isEqualTo(unitModel.measurementType)
+        assertThat(defaultMode.changeUnit(unit).measurementType)
+            .isEqualTo(updatedUnitModel.measurementType)
     }
 
     @Test
-    fun `when changing the weight changes the BMI` (){
+    fun `when updating the weight updates the BMI` (){
         val defaultModel = BmiModel.DEFAULT
         val weight = 75.0F
-        val weightModel = BmiModel(182.5F,75.0F,22.52F,MeasurementType.METRIC,WeightCategory.NORMAL_WEIGHT)
+        val updatedWeightModel = BmiModel(160.0F,75.0F,MeasurementType.METRIC)
 
-        assertThat(defaultModel.weightChange(weight))
-            .isEqualTo(weightModel)
+        assertThat(defaultModel.changeWeight(weight).getBmi())
+            .isEqualTo(updatedWeightModel.getBmi())
     }
 
     @Test
-    fun `when changing the height changes the BMI`(){
+    fun `when updating the height updates the BMI`() {
         val defaultModel = BmiModel.DEFAULT
         val height = 175.0F
-        val heightModel = BmiModel(175.0F,80.0F,26.12F,MeasurementType.METRIC,WeightCategory.OVER_WEIGHT)
+        val updatedHeightModel = BmiModel(175.0F,48.0F,MeasurementType.METRIC)
 
-        assertThat(defaultModel.heightChange(height))
-            .isEqualTo(heightModel)
+        assertThat(defaultModel.changeHeight(height).getBmi())
+            .isEqualTo(updatedHeightModel.getBmi())
     }
 
     @Test
-    fun `when changing the unit system changes the height and weight from METRIC to IMPERIAL` (){
-        val metricModel = BmiModel(182.50F,80.0F, 24.0F, MeasurementType.METRIC, WeightCategory.NORMAL_WEIGHT)
+    fun `when changing the unit system changes the height and weight from METRIC to IMPERIAL` () {
+        val metricModel = BmiModel(160.0F,48.0F,  MeasurementType.METRIC)
         val unit = MeasurementType.IMPERIAL
-        val unitModel = BmiModel(71.85F,176.40F,24.0F,MeasurementType.IMPERIAL, WeightCategory.NORMAL_WEIGHT)
+        val imperialModel = BmiModel(160.0F,48.0F,MeasurementType.IMPERIAL)
 
-        assertThat(metricModel.unitChange(unit))
-            .isEqualTo(unitModel)
+        assertThat(metricModel.changeUnit(unit))
+            .isEqualTo(imperialModel)
     }
 
     @Test
-    fun `when changing the unit system changes the height and weight from IMPERIAL to METRIC` (){
-        val imperialModel = BmiModel(71.850F,176.40F, 24.0F, MeasurementType.METRIC, WeightCategory.NORMAL_WEIGHT)
+    fun `when changing the unit system changes the height and weight from IMPERIAL to METRIC` () {
+        val imperialModel = BmiModel(160.0F,48.0F,  MeasurementType.IMPERIAL)
         val unit = MeasurementType.METRIC
-        val unitModel = BmiModel(182.5F,80.0F,24.0F,MeasurementType.METRIC, WeightCategory.NORMAL_WEIGHT)
+        val unitModel = BmiModel(160.0F,48.0F,MeasurementType.METRIC)
 
-        assertThat(imperialModel.unitChange(unit))
+        assertThat(imperialModel.changeUnit(unit))
             .isEqualTo(unitModel)
     }
 }

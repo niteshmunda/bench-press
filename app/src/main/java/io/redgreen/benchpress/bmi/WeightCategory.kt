@@ -1,6 +1,10 @@
 package io.redgreen.benchpress.bmi
 
-enum class WeightCategory {
+// Map to human readable strings
 
-    UNDERWEIGHT, NORMAL_WEIGHT, OVER_WEIGHT, OBESE
+enum class WeightCategory (val category: String) {
+    UNDERWEIGHT ("Under Weight"),
+    NORMAL_WEIGHT ("Normal Weight"),
+    OVER_WEIGHT ("Over Weight"),
+    OBESE ("Obesity")
 }
