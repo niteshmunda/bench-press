@@ -9,7 +9,7 @@ class BmiModelTest {
 
     @Test
     fun `when weight is updated, its property is updated`() {
-        val defaultModel = BmiModel.DEFAULT
+        val defaultModel = BmiModel.modelFor(48.0F,160.0F)
         val weight = 88.0F
         val updatedWeightModel = defaultModel.changeWeight(weight)
 
@@ -19,7 +19,7 @@ class BmiModelTest {
 
     @Test
     fun `when height is updated, its property is updated`() {
-        val defaultModel = BmiModel.DEFAULT
+        val defaultModel = BmiModel.modelFor(48.0F,160.0F)
         val height = 180.0F
         val updatedHeightModel = BmiModel(180.0F,0F,MeasurementType.METRIC)
 
@@ -29,7 +29,7 @@ class BmiModelTest {
 
     @Test
     fun `when unit is updated from metric to imperial`() {
-        val defaultMode = BmiModel.DEFAULT
+        val defaultMode = BmiModel.modelFor(48.0F,160.0F)
         val unit = MeasurementType.IMPERIAL
         val updatedUnitModel = BmiModel(0F,0F,MeasurementType.IMPERIAL)
 
@@ -39,22 +39,22 @@ class BmiModelTest {
 
     @Test
     fun `when updating the weight updates the BMI` (){
-        val defaultModel = BmiModel.DEFAULT
+        val defaultModel = BmiModel.modelFor(48.0F,160.0F)
         val weight = 75.0F
         val updatedWeightModel = BmiModel(160.0F,75.0F,MeasurementType.METRIC)
 
-        assertThat(defaultModel.changeWeight(weight).getBmi())
-            .isEqualTo(updatedWeightModel.getBmi())
+        assertThat(defaultModel.changeWeight(weight).bmi)
+            .isEqualTo(updatedWeightModel.bmi)
     }
 
     @Test
     fun `when updating the height updates the BMI`() {
-        val defaultModel = BmiModel.DEFAULT
+        val defaultModel = BmiModel.modelFor(48.0F,160.0F)
         val height = 175.0F
         val updatedHeightModel = BmiModel(175.0F,48.0F,MeasurementType.METRIC)
 
-        assertThat(defaultModel.changeHeight(height).getBmi())
-            .isEqualTo(updatedHeightModel.getBmi())
+        assertThat(defaultModel.changeHeight(height).bmi)
+            .isEqualTo(updatedHeightModel.bmi)
     }
 
     @Test

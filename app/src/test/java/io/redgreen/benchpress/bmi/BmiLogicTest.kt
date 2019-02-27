@@ -11,7 +11,7 @@ class BmiLogicTest {
 
     @Test
     fun `user can change height`() {
-        val defaultModel = BmiModel.DEFAULT
+        val defaultModel = BmiModel.modelFor(48.0F,160.0F)
         val randomHeight = 180.0F
         updateSpec
             .given(defaultModel)
@@ -26,7 +26,7 @@ class BmiLogicTest {
 
     @Test
     fun `user can change weight`() {
-        val defaultModel = BmiModel.DEFAULT
+        val defaultModel = BmiModel.modelFor(48.0F,160.0F)
         val randomWeight = 74.0F
 
         updateSpec
@@ -42,7 +42,7 @@ class BmiLogicTest {
 
     @Test
     fun `user can change unit system`() {
-        val defaultModel = BmiModel.DEFAULT
+        val defaultModel = BmiModel.modelFor(48.0F,160.0F)
         val randomUnit = MeasurementType.IMPERIAL
 
         updateSpec
