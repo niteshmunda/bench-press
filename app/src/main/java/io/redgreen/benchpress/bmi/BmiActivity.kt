@@ -14,6 +14,8 @@ import kotlinx.android.synthetic.main.bmi_activity.*
 
 class BmiActivity : BaseActivity<BmiModel, BmiEvent, Nothing>(){
 
+    val min_weight_kg = 30
+    val min_height_cm = 120
     private var weightUnit : String = "Kg"
     private var heightUnit : String = "Cm"
     var unitSystem : String = "Metric Units"
@@ -31,7 +33,7 @@ class BmiActivity : BaseActivity<BmiModel, BmiEvent, Nothing>(){
     override fun setup() {
         weightSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                eventSource.notifyEvent(WeightChangeEvent((30+progress).toFloat()))
+                eventSource.notifyEvent(WeightChangeEvent((min_weight_kg+progress).toFloat()))
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -45,7 +47,7 @@ class BmiActivity : BaseActivity<BmiModel, BmiEvent, Nothing>(){
 
         heightSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                eventSource.notifyEvent(HeightChangeEvent((120+progress).toFloat()))
+                eventSource.notifyEvent(HeightChangeEvent((min_height_cm+progress).toFloat()))
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
