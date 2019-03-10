@@ -16,7 +16,7 @@ class LoginViewRenderer(
         }else{
             loginView.hideEmailError()
         }
-        if (model.showPAsswordError){
+        if (model.showPasswordError){
             loginView.showPasswordError(R.string.invalid_password)
         }
         else{

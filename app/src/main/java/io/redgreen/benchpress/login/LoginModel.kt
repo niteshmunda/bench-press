@@ -13,6 +13,8 @@ data class LoginModel(
         val EMPTY = LoginModel("","",ApiState.IDLE)
     }
 
+    constructor(email: String, password: String) : this(email, password, ApiState.IDLE)
+
     private fun verifyLogin(email: String, password: String): Boolean {
         if (isValidEmail(email) && isValidPassword(password))
             return true
@@ -62,7 +64,7 @@ data class LoginModel(
     val showEmailError: Boolean
         get() = !(email.contains("@") && email.contains(".")) && email.indexOf("@")  > email.indexOf(".")
 
-    val showPAsswordError: Boolean
+    val showPasswordError: Boolean
         get() = !(password.length >= 8)
 
 }

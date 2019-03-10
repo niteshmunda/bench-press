@@ -1,5 +1,7 @@
 package io.redgreen.benchpress.launchpad
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
@@ -16,6 +18,13 @@ import kotlinx.android.synthetic.main.launchpad_activity.*
 import kotlin.LazyThreadSafetyMode.NONE
 
 class LaunchpadActivity : AppCompatActivity() {
+
+  companion object {
+    fun start(context: Context) {
+      context.startActivity(Intent(context, LaunchpadActivity::class.java))
+    }
+  }
+
   private val examples by lazy(NONE) {
     listOf(
       Example(getString(R.string.counter_title)) { context -> CounterActivity.start(context) },
