@@ -10,6 +10,8 @@ object GitHubLogic : Update<GitHubModel, GitHubEvent, GitHubEffect> {
     ): Next<GitHubModel, GitHubEffect> {
         if (event is UsernameChangedEvent) {
             return Next.next(model.usernameChanged(event.username))
+        } else if (event is UsernameClearedEvent) {
+            return Next.next(GitHubModel.EMPTY)
         }
         TODO()
     }

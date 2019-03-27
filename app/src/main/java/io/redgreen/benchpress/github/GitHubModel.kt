@@ -4,7 +4,7 @@ data class GitHubModel(
     val username: String
 ) {
     companion object {
-        val EMPTY_STATE = GitHubModel("")
+        val EMPTY = GitHubModel("")
     }
 
     fun usernameChanged(username: String): GitHubModel =
