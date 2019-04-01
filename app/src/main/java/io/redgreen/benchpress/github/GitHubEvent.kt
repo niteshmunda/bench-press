@@ -7,3 +7,7 @@ data class UsernameChangedEvent(
 ) : GitHubEvent()
 
 object UsernameClearedEvent : GitHubEvent()
+
+data class FetchFollowersEvent(
+    val username: String
+) : GitHubEvent()
