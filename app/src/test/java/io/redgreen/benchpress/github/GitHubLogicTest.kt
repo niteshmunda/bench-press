@@ -3,6 +3,7 @@ package io.redgreen.benchpress.github
 import com.spotify.mobius.test.NextMatchers.*
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
+import io.redgreen.benchpress.github.domain.User
 import org.junit.Test
 
 class GitHubLogicTest {
@@ -43,15 +44,32 @@ class GitHubLogicTest {
     fun `when user clicks search, then make a network call`() {
         val username = "jakewharton"
         val hasUsernameModel = emptyModel.usernameChanged(username)
-        val fetchingFollowersModel = hasUsernameModel.fetchingFollowers()
 
         updateSpec
             .given(hasUsernameModel)
             .`when`(FetchFollowersEvent(username))
             .then(
                 assertThatNext(
-                    hasModel(fetchingFollowersModel),
+                    hasModel(hasUsernameModel.fetchingFollowers()),
                     hasEffects(FetchFollowersEffect(username) as GitHubEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `when fetching followers was successful, then show a list of followers`() {
+        val fetchingFollowersModel = emptyModel
+            .usernameChanged("jakewharton")
+            .fetchingFollowers()
+        val followers = listOf(User("tom", "https://someurl.jpg/"))
+
+        updateSpec
+            .given(fetchingFollowersModel)
+            .`when`(FollowersFetchedEvent(followers))
+            .then(
+                assertThatNext(
+                    hasModel(fetchingFollowersModel.followersFetched(followers)),
+                    hasNoEffects()
                 )
             )
     }
