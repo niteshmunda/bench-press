@@ -57,7 +57,7 @@ class GitHubLogicTest {
     }
 
     @Test
-    fun `when fetching followers was successful, then show a list of followers`() {
+    fun `when user has followers, then show a list of followers`() {
         val fetchingFollowersModel = emptyModel
             .usernameChanged("jakewharton")
             .fetchingFollowers()
@@ -69,6 +69,23 @@ class GitHubLogicTest {
             .then(
                 assertThatNext(
                     hasModel(fetchingFollowersModel.followersFetched(followers)),
+                    hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `when user does not have followers, then show no followers message`() {
+        val fetchingFollowersModel = emptyModel
+            .usernameChanged("jakewharton")
+            .fetchingFollowers()
+
+        updateSpec
+            .given(fetchingFollowersModel)
+            .`when`(NoFollowersEvent)
+            .then(
+                assertThatNext(
+                    hasModel(fetchingFollowersModel.noFollowers()),
                     hasNoEffects()
                 )
             )

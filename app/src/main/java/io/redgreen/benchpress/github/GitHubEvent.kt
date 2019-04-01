@@ -17,3 +17,5 @@ data class FetchFollowersEvent(
 data class FollowersFetchedEvent(
     val followers: List<User>
 ) : GitHubEvent()
+
+object NoFollowersEvent : GitHubEvent()

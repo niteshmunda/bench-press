@@ -1,8 +1,7 @@
 package io.redgreen.benchpress.github
 
 import io.redgreen.benchpress.architecture.AsyncOp
-import io.redgreen.benchpress.architecture.AsyncOp.IDLE
-import io.redgreen.benchpress.architecture.AsyncOp.IN_FLIGHT
+import io.redgreen.benchpress.architecture.AsyncOp.*
 import io.redgreen.benchpress.github.domain.User
 
 data class GitHubModel(
@@ -22,4 +21,7 @@ data class GitHubModel(
 
     fun followersFetched(followers: List<User>): GitHubModel =
         copy(/*fetchFollowersAsyncOp = SUCCEEDED,*/ followers = followers)
+
+    fun noFollowers(): GitHubModel =
+        copy(fetchFollowersAsyncOp = SUCCEEDED, followers = emptyList())
 }
