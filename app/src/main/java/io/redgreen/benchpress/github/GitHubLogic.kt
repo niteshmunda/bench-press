@@ -17,7 +17,8 @@ object GitHubLogic : Update<GitHubModel, GitHubEvent, GitHubEffect> {
             is NoFollowersEvent -> next(model.noFollowers())
             is FollowersFetchFailedEvent -> next(model.followersFetchFailed())
             is UsernameNotFoundEvent -> next(model.usernameNotFound())
-            else -> TODO()
+            is RetryFetchFollowersEvent -> next(model.fetchingFollowers(), setOf(FetchFollowersEffect((model.username))))
+            else -> TODO("Unsupported event $event")
         }
     }
 }

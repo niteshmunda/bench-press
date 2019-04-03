@@ -23,3 +23,5 @@ object NoFollowersEvent : GitHubEvent()
 object FollowersFetchFailedEvent : GitHubEvent()
 
 object UsernameNotFoundEvent : GitHubEvent()
+
+object RetryFetchFollowersEvent : GitHubEvent()

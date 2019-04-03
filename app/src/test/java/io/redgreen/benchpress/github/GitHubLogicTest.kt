@@ -109,6 +109,25 @@ class GitHubLogicTest {
     }
 
     @Test
+    fun `when user taps retry, then retry fetching followers`() {
+        val username = "nitesh"
+        val followersFetchFailed = emptyModel
+            .usernameChanged(username)
+            .fetchingFollowers()
+            .followersFetchFailed()
+
+        updateSpec
+            .given(followersFetchFailed)
+            .`when`(RetryFetchFollowersEvent)
+            .then(
+                assertThatNext(
+                    hasModel(followersFetchFailed.fetchingFollowers()),
+                    hasEffects(FetchFollowersEffect(username) as GitHubEffect)
+                )
+            )
+    }
+
+    @Test
     fun `when username does not exist, then show no username error`() {
         val fetchingFollowersModel = emptyModel
             .usernameChanged("not-found-username")
