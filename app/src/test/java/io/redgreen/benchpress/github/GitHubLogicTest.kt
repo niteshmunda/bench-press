@@ -19,7 +19,7 @@ class GitHubLogicTest {
             .`when`(UsernameChangedEvent(username))
             .then(
                 assertThatNext(
-                    hasModel(emptyModel.usernameChanged(username)),
+                    hasModel(emptyModel.usernameChanged(username)), // TODO 1. How does the UI know if username is present? // 2. Empty username // 3. Username with leading/trailing spaces.
                     hasNoEffects()
                 )
             )
@@ -34,7 +34,7 @@ class GitHubLogicTest {
             .`when`(UsernameClearedEvent)
             .then(
                 assertThatNext(
-                    hasModel(emptyModel),
+                    hasModel(emptyModel), // TODO 1. Same as previous. How do we know we are disabling the search button. 'canSearch'
                     hasNoEffects()
                 )
             )
@@ -68,7 +68,7 @@ class GitHubLogicTest {
             .`when`(FollowersFetchedEvent(followers))
             .then(
                 assertThatNext(
-                    hasModel(fetchingFollowersModel.followersFetched(followers)),
+                    hasModel(fetchingFollowersModel.followersFetchedSuccess(followers)),
                     hasNoEffects()
                 )
             )
@@ -86,6 +86,110 @@ class GitHubLogicTest {
             .then(
                 assertThatNext(
                     hasModel(fetchingFollowersModel.noFollowers()),
+                    hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `when fetching followers failed, then show fetch failed error`() {
+        val fetchingFollowersModel = emptyModel
+            .usernameChanged("jakewharton")
+            .fetchingFollowers()
+
+        updateSpec
+            .given(fetchingFollowersModel)
+            .`when`(FollowersFetchFailedEvent)
+            .then(
+                assertThatNext(
+                    hasModel(fetchingFollowersModel.followersFetchFailed()),
+                    hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `when username does not exist, then show no username error`() {
+        val fetchingFollowersModel = emptyModel
+            .usernameChanged("not-found-username")
+            .fetchingFollowers()
+
+        updateSpec
+            .given(fetchingFollowersModel)
+            .`when`(UsernameNotFoundEvent)
+            .then(
+                assertThatNext(
+                    hasModel(fetchingFollowersModel.usernameNotFound()),
+                    hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `when user clears the username (has followers), then go to empty state`() {
+        val followers = listOf(User("tom", "https://someurl.jpg/"))
+        val followersFetchedModel = emptyModel
+            .usernameChanged("nitesh")
+            .followersFetchedSuccess(followers)
+
+        updateSpec
+            .given(followersFetchedModel)
+            .`when`(UsernameClearedEvent)
+            .then(
+                assertThatNext(
+                    hasModel(emptyModel),
+                    hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `when user clears the username (no followers), then go to empty state`() {
+        val followersFetchedModel = emptyModel
+            .usernameChanged("nitesh")
+            .noFollowers()
+
+        updateSpec
+            .given(followersFetchedModel)
+            .`when`(UsernameClearedEvent)
+            .then(
+                assertThatNext(
+                    hasModel(emptyModel),
+                    hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `when user clears the username (error), then go to empty state`() {
+        val followersFetchedFail = emptyModel
+            .usernameChanged("nitesh")
+            .followersFetchFailed()
+
+        updateSpec
+            .given(followersFetchedFail)
+            .`when`(UsernameClearedEvent)
+            .then(
+                assertThatNext(
+                    hasModel(emptyModel),
+                    hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `when user clears the username (non-existent username), then go to empty state`() {
+        val usernameNotFoundModel = emptyModel
+            .usernameChanged("nitesh")
+            .fetchingFollowers()
+            .usernameNotFound()
+
+        updateSpec
+            .given(usernameNotFoundModel)
+            .`when`(UsernameClearedEvent)
+            .then(
+                assertThatNext(
+                    hasModel(emptyModel),
                     hasNoEffects()
                 )
             )

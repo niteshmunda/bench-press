@@ -19,3 +19,7 @@ data class FollowersFetchedEvent(
 ) : GitHubEvent()
 
 object NoFollowersEvent : GitHubEvent()
+
+object FollowersFetchFailedEvent : GitHubEvent()
+
+object UsernameNotFoundEvent : GitHubEvent()
