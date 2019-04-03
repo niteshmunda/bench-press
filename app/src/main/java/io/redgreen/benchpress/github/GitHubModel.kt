@@ -13,7 +13,7 @@ data class GitHubModel(
 ) {
     val canSearch: Boolean
     get() {
-        return false
+        return username.isNotBlank()
     }
 
     companion object {
