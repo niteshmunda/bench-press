@@ -1,12 +1,10 @@
 package io.redgreen.benchpress.github
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.Ignore
 import org.junit.Test
 
 class GitHubModelTest {
-    // TODO 1. Same as previous. How do we know we are disabling the search button. 'canSearch'
-    // TODO 2. Username with leading/trailing spaces.
+    // TODO 1. Username with leading/trailing spaces.
 
     @Test
     fun `when the username is empty, then user cannot search`() {
@@ -18,7 +16,7 @@ class GitHubModelTest {
     }
 
     @Test
-    fun `when username is only white spaces, then user cannot search`() {
+    fun `when username is only whitespaces, then user cannot search`() {
         val blankUsernameModel = GitHubModel.EMPTY
             .usernameChanged("  ")
 
@@ -27,7 +25,7 @@ class GitHubModelTest {
     }
 
     @Test
-    fun `when username has leading white spaces, then user cannot search`() {
+    fun `when username has leading whitespaces, then user cannot search`() {
         val leadingWhitespaceUsernameModel = GitHubModel.EMPTY
             .usernameChanged("   nitesh")
 
@@ -35,13 +33,21 @@ class GitHubModelTest {
             .isTrue()
     }
 
-    @Ignore
     @Test
-    fun `when username has trailing white spaces, then user cannot search`() {
+    fun `when username has trailing whitespaces, then user cannot search`() {
         val trailingWhitespaceUsernameModel = GitHubModel.EMPTY
             .usernameChanged("nitesh  ")
 
         assertThat(trailingWhitespaceUsernameModel.canSearch)
             .isTrue()
+    }
+
+    @Test
+    fun `when username has leading whitespaces, then it will trim the whitespaces`() {
+        val leadingWhitespacesUsernameModel = GitHubModel.EMPTY
+            .usernameChanged("  nitesh")
+
+        assertThat(leadingWhitespacesUsernameModel.username)
+            .isEqualTo("nitesh")
     }
 }

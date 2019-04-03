@@ -21,7 +21,7 @@ data class GitHubModel(
     }
 
     fun usernameChanged(username: String): GitHubModel =
-        copy(username = username, usernamePresence = UNKNOWN)
+        copy(username = username.trim(), usernamePresence = UNKNOWN)
 
     fun fetchingFollowers(): GitHubModel =
         copy(fetchFollowersAsyncOp = IN_FLIGHT)
