@@ -4,8 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class GitHubModelTest {
-    // TODO 1. Username with leading/trailing spaces.
-
     @Test
     fun `when the username is empty, then user cannot search`() {
         val emptyUsernameModel = GitHubModel.EMPTY
@@ -48,6 +46,15 @@ class GitHubModelTest {
             .usernameChanged("  nitesh")
 
         assertThat(leadingWhitespacesUsernameModel.username)
+            .isEqualTo("nitesh")
+    }
+
+    @Test
+    fun `when username has trailing whitespaces, then it will trim the whitespaces`() {
+        val trailingUsernameModel = GitHubModel.EMPTY
+            .usernameChanged("nitesh  ")
+
+        assertThat(trailingUsernameModel.username)
             .isEqualTo("nitesh")
     }
 }
