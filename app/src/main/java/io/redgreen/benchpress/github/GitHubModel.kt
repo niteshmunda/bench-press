@@ -11,6 +11,11 @@ data class GitHubModel(
     val followers: List<User> = emptyList(),
     val usernamePresence: UsernamePresence = UNKNOWN
 ) {
+    val canSearch: Boolean
+    get() {
+        return false
+    }
+
     companion object {
         val EMPTY = GitHubModel("", IDLE, emptyList())
     }
