@@ -16,5 +16,13 @@ class GitHubModelTest {
             .isFalse()
     }
 
+    @Test
+    fun `when username is only spaces, then user cannot search`() {
+        val blankUsernameModel = GitHubModel
+            .EMPTY.usernameChanged("  ")
+
+        assertThat(blankUsernameModel.canSearch)
+            .isFalse()
+    }
 
 }
