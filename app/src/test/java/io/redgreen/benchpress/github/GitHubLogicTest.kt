@@ -19,7 +19,7 @@ class GitHubLogicTest {
             .`when`(UsernameChangedEvent(username))
             .then(
                 assertThatNext(
-                    hasModel(emptyModel.usernameChanged(username)), // TODO 1. How does the UI know if username is present? // 2. Empty username // 3. Username with leading/trailing spaces.
+                    hasModel(emptyModel.usernameChanged(username)), // TODO 1. How does the UI know if username is non-empty? // 2. Empty username // 3. Username with leading/trailing spaces.
                     hasNoEffects()
                 )
             )

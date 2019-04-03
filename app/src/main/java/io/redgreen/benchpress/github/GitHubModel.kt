@@ -2,20 +2,21 @@ package io.redgreen.benchpress.github
 
 import io.redgreen.benchpress.architecture.AsyncOp
 import io.redgreen.benchpress.architecture.AsyncOp.*
+import io.redgreen.benchpress.github.GitHubModel.UsernamePresence.*
 import io.redgreen.benchpress.github.domain.User
 
 data class GitHubModel(
     val username: String,
     val fetchFollowersAsyncOp: AsyncOp = IDLE,
     val followers: List<User> = emptyList(),
-    val usernameNotFound: Boolean = false /* Deal with when the username is found! NOW. */
+    val usernamePresence: UsernamePresence = UNKNOWN
 ) {
     companion object {
-        val EMPTY = GitHubModel("", IDLE, emptyList(), false)
+        val EMPTY = GitHubModel("", IDLE, emptyList())
     }
 
     fun usernameChanged(username: String): GitHubModel =
-        copy(username = username)
+        copy(username = username, usernamePresence = UNKNOWN)
 
     fun fetchingFollowers(): GitHubModel =
         copy(fetchFollowersAsyncOp = IN_FLIGHT)
@@ -24,11 +25,15 @@ data class GitHubModel(
         copy(/*fetchFollowersAsyncOp = SUCCEEDED,*/ followers = followers)
 
     fun noFollowers(): GitHubModel =
-        copy(fetchFollowersAsyncOp = SUCCEEDED, followers = emptyList())
+        copy(fetchFollowersAsyncOp = SUCCEEDED, followers = emptyList(), usernamePresence = FOUND)
 
     fun followersFetchFailed(): GitHubModel =
-        copy(fetchFollowersAsyncOp = FAILED, followers = emptyList())
+        copy(fetchFollowersAsyncOp = FAILED, followers = emptyList(), usernamePresence = UNKNOWN)
 
     fun usernameNotFound(): GitHubModel =
-        copy(fetchFollowersAsyncOp = SUCCEEDED, followers = emptyList(), usernameNotFound = true)
+        copy(fetchFollowersAsyncOp = SUCCEEDED, followers = emptyList(), usernamePresence = NOT_FOUND)
+
+    enum class UsernamePresence {
+        UNKNOWN, FOUND, NOT_FOUND
+    }
 }
