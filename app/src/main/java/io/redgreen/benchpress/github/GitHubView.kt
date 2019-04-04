@@ -7,4 +7,5 @@ interface GitHubView {
     fun hideNoFollowersMessage()
     fun hideRetryMessage()
     fun hideUsernameNotFoundMessage()
+    fun enableSearchButton()
 }

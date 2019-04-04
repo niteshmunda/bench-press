@@ -6,13 +6,12 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 
 class GitHubViewRendererTest {
+    private val view = mock<GitHubView>()
+    private val viewRenderer = GitHubViewRenderer(view)
+    private val emptyModel = GitHubModel.EMPTY
+
     @Test
     fun `it can render empty state`() {
-        // given
-        val view = mock<GitHubView>()
-        val viewRenderer = GitHubViewRenderer(view)
-        val emptyModel = GitHubModel.EMPTY
-
         // when
         viewRenderer.render(emptyModel)
 
@@ -23,6 +22,20 @@ class GitHubViewRendererTest {
         verify(view).hideNoFollowersMessage()
         verify(view).hideRetryMessage()
         verify(view).hideUsernameNotFoundMessage()
+
+        verifyNoMoreInteractions(view)
+    }
+
+    @Test
+    fun `it can render has username state`() {
+        // given
+        val hasUsernameState = emptyModel.usernameChanged("nitesh")
+
+        // when
+        viewRenderer.render(hasUsernameState)
+
+        // then
+        verify(view).enableSearchButton()
 
         verifyNoMoreInteractions(view)
     }
