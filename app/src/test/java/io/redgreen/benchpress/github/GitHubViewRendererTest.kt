@@ -3,6 +3,7 @@ package io.redgreen.benchpress.github
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import io.redgreen.benchpress.github.domain.User
 import org.junit.Test
 
 class GitHubViewRendererTest {
@@ -36,6 +37,41 @@ class GitHubViewRendererTest {
 
         // then
         verify(view).enableSearchButton()
+
+        verifyNoMoreInteractions(view)
+    }
+
+    @Test
+    fun `it can render loading state`() {
+        // given
+        val loadingState = emptyModel.usernameChanged("nitesh").fetchingFollowers()
+
+        // when
+        viewRenderer.render(loadingState)
+
+        // then
+        verify(view).disableSearchButton()
+        verify(view).disableUsernameTextView()
+        verify(view).showProgress()
+        verify(view).hideRetryMessage()
+
+        verifyNoMoreInteractions(view)
+    }
+
+    @Test
+    fun `it can render followers state`() {
+        // given
+        val followers = listOf(User("tom", "https//someurl.jpg"))
+        val hasFollowersState = emptyModel.usernameChanged("nitesh").followersFetchedSuccess(followers)
+
+        // when
+        viewRenderer.render(hasFollowersState)
+
+        // then
+        verify(view).enableSearchButton()
+        verify(view).enableUsernameTextView()
+        verify(view).showFollowers()
+        verify(view).hideProgress()
 
         verifyNoMoreInteractions(view)
     }

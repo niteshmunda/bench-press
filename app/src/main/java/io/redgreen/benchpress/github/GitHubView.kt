@@ -8,4 +8,8 @@ interface GitHubView {
     fun hideRetryMessage()
     fun hideUsernameNotFoundMessage()
     fun enableSearchButton()
+    fun disableUsernameTextView()
+    fun showProgress()
+    fun showFollowers()
+    fun hideProgress()
 }

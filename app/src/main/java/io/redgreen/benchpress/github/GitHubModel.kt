@@ -12,9 +12,14 @@ data class GitHubModel(
     val usernamePresence: UsernamePresence = UNKNOWN
 ) {
     val canSearch: Boolean
-    get() {
-        return username.isNotBlank()
-    }
+        get() {
+            return username.isNotBlank()
+        }
+
+    val hasFollowers: Boolean
+        get() {
+            return followers.isNotEmpty()
+        }
 
     companion object {
         val EMPTY = GitHubModel("", IDLE, emptyList())
@@ -27,7 +32,7 @@ data class GitHubModel(
         copy(fetchFollowersAsyncOp = IN_FLIGHT)
 
     fun followersFetchedSuccess(followers: List<User>): GitHubModel =
-        copy(/*fetchFollowersAsyncOp = SUCCEEDED,*/ followers = followers)
+        copy(fetchFollowersAsyncOp = SUCCEEDED, followers = followers)
 
     fun noFollowers(): GitHubModel =
         copy(fetchFollowersAsyncOp = SUCCEEDED, followers = emptyList(), usernamePresence = FOUND)
