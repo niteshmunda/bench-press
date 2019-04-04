@@ -11,6 +11,13 @@ class GitHubViewRenderer(private val view: GitHubView) {
             view.enableSearchButton()
         }
 
+        if (model.fetchFollowersAsyncOp == AsyncOp.SUCCEEDED && !model.hasFollowers) {
+            view.enableUsernameTextView()
+            view.enableSearchButton()
+            view.hideProgress()
+            view.showNoFollowersMessage()
+        }
+
         if (model.fetchFollowersAsyncOp == AsyncOp.IN_FLIGHT) {
             view.disableSearchButton()
             view.disableUsernameTextView()
@@ -21,7 +28,7 @@ class GitHubViewRenderer(private val view: GitHubView) {
         if (model.canSearch && model.fetchFollowersAsyncOp == AsyncOp.IDLE) {
             view.enableSearchButton()
 
-        } else if (!model.canSearch) {
+        } else if (!model.canSearch && model.fetchFollowersAsyncOp == AsyncOp.IDLE) {
             view.disableSearchButton()
             view.hideFollowers()
             view.enableUsernameTextView()

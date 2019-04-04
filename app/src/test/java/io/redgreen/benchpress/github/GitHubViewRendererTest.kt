@@ -75,4 +75,22 @@ class GitHubViewRendererTest {
 
         verifyNoMoreInteractions(view)
     }
+
+    @Test
+    fun `it can render no followers state`() {
+        // given
+        val noFollowersState = emptyModel.usernameChanged("nitesh").noFollowers()
+
+        // when
+        viewRenderer.render(noFollowersState)
+
+        // then
+        verify(view).enableSearchButton()
+        verify(view).enableUsernameTextView()
+        verify(view).hideProgress()
+        verify(view).showNoFollowersMessage()
+
+        verifyNoMoreInteractions(view)
+    }
+
 }
