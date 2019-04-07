@@ -13,4 +13,5 @@ interface GitHubView {
     fun showFollowers()
     fun hideProgress()
     fun showNoFollowersMessage()
+    fun showRetryMessage()
 }

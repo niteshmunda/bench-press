@@ -93,4 +93,22 @@ class GitHubViewRendererTest {
         verifyNoMoreInteractions(view)
     }
 
+    @Test
+    fun `it can render Api error state`() {
+        // given
+        val apiErrorState = emptyModel.usernameChanged("nitesh").followersFetchFailed()
+
+        // when
+        viewRenderer.render(apiErrorState)
+
+        // then
+        verify(view).enableSearchButton()
+        verify(view).enableUsernameTextView()
+        verify(view).hideProgress()
+        verify(view).showRetryMessage()
+
+        verifyNoMoreInteractions(view)
+    }
+
+
 }

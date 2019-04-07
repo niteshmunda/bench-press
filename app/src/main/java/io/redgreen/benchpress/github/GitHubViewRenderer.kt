@@ -4,6 +4,13 @@ import io.redgreen.benchpress.architecture.AsyncOp
 
 class GitHubViewRenderer(private val view: GitHubView) {
     fun render(model: GitHubModel) {
+        if (model.fetchFollowersAsyncOp == AsyncOp.FAILED) {
+            view.enableUsernameTextView()
+            view.enableSearchButton()
+            view.hideProgress()
+            view.showRetryMessage()
+        }
+
         if (model.fetchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.hasFollowers) {
             view.enableUsernameTextView()
             view.hideProgress()
