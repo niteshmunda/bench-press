@@ -14,4 +14,5 @@ interface GitHubView {
     fun hideProgress()
     fun showNoFollowersMessage()
     fun showRetryMessage()
+    fun showUsernameNotFoundMessage()
 }

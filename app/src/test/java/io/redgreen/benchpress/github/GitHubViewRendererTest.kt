@@ -110,5 +110,21 @@ class GitHubViewRendererTest {
         verifyNoMoreInteractions(view)
     }
 
+    @Test
+    fun `it can render non-existent user state`() {
+        // given
+        val usernameNotFoundState = emptyModel.usernameChanged("nitesh").usernameNotFound()
+
+        // when
+        viewRenderer.render(usernameNotFoundState)
+
+        // then
+        verify(view).enableSearchButton()
+        verify(view).enableUsernameTextView()
+        verify(view).hideProgress()
+        verify(view).showUsernameNotFoundMessage()
+
+        verifyNoMoreInteractions(view)
+    }
 
 }
