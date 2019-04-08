@@ -11,6 +11,9 @@ data class LoginModel(
     val BLANK = LoginModel(Email(""), Password(""))
   }
 
+  val isReadyForLogin: Boolean
+    get() = email.isValid() && password.isValid()
+
   fun emailChanged(email: String): LoginModel {
     return copy(email = Email(email))
   }
