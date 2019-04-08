@@ -7,10 +7,11 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 
 class LoginLogicTest {
+  private val updateSpec = UpdateSpec<LoginModel, LoginEvent, LoginEffect>(LoginLogic::update)
+  private val blankModel = LoginModel.BLANK
+
   @Test
   fun `when user changes email, then update email`() {
-    val updateSpec = UpdateSpec<LoginModel, LoginEvent, LoginEffect>(LoginLogic::update)
-    val blankModel = LoginModel.BLANK
     val email = "nainesh@dunzo.in"
 
     updateSpec
@@ -19,6 +20,21 @@ class LoginLogicTest {
       .then(
         assertThatNext(
           hasModel(blankModel.emailChanged(email)),
+          hasNoEffects()
+        )
+      )
+  }
+
+  @Test
+  fun `when user changes password, then update password`() {
+    val password = "some-secret-password"
+
+    updateSpec
+      .given(blankModel)
+      .`when`(PasswordChangedEvent(password))
+      .then(
+        assertThatNext(
+          hasModel(blankModel.passwordChanged(password)),
           hasNoEffects()
         )
       )

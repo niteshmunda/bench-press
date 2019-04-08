@@ -10,8 +10,10 @@ object LoginLogic : Update<LoginModel, LoginEvent, LoginEffect> {
   ): Next<LoginModel, LoginEffect> {
     if (event is EmailChangedEvent) {
       return Next.next(model.emailChanged(event.email))
+    } else if (event is PasswordChangedEvent) {
+      return Next.next(model.passwordChanged(event.password))
     }
 
-    throw UnsupportedOperationException("Unknown event: $event")
+    TODO("Unknown event: $event")
   }
 }
