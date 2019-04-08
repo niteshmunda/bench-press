@@ -11,3 +11,7 @@ data class PasswordChangedEvent(
 ) : LoginEvent()
 
 object AttemptLoginEvent : LoginEvent()
+
+data class UserAuthenticatedEvent(
+  val token: String
+) : LoginEvent()

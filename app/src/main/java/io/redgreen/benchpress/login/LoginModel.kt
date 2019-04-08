@@ -1,12 +1,14 @@
 package io.redgreen.benchpress.login
 
+import io.redgreen.benchpress.login.domain.AsyncOp
+import io.redgreen.benchpress.login.domain.AsyncOp.*
 import io.redgreen.benchpress.login.domain.Email
 import io.redgreen.benchpress.login.domain.Password
 
 data class LoginModel(
   val email: Email,
   val password: Password,
-  val loggingIn: Boolean = false
+  val loggingInAsyncOp: AsyncOp = IDLE
 ) {
   companion object {
     val BLANK = LoginModel(Email(""), Password(""))
@@ -24,6 +26,10 @@ data class LoginModel(
   }
 
   fun attemptLogin(): LoginModel {
-    return copy(loggingIn = true)
+    return copy(loggingInAsyncOp = IN_PROGRESS)
+  }
+
+  fun userAuthenticated(): LoginModel {
+    return copy(loggingInAsyncOp = SUCCEEDED)
   }
 }

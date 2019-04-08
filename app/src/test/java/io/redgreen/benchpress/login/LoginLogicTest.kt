@@ -53,4 +53,23 @@ class LoginLogicTest {
         )
       )
   }
+
+  @Test
+  fun `when login is successful, then user can go to home screen`() {
+    val loggingInLoginModel = blankModel
+      .emailChanged(email)
+      .passwordChanged(password)
+      .attemptLogin()
+    val token = "some-auth-token"
+
+    updateSpec
+      .given(loggingInLoginModel)
+      .`when`(UserAuthenticatedEvent(token))
+      .then(
+        assertThatNext(
+          hasModel(loggingInLoginModel.userAuthenticated()),
+          hasEffects(GoToHomeEffect(token) as LoginEffect)
+        )
+      )
+  }
 }
