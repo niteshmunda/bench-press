@@ -1,15 +1,17 @@
 package io.redgreen.benchpress.login
 
+import io.redgreen.benchpress.login.domain.Email
+
 data class LoginModel(
-  val email: String,
+  val email: Email,
   val password: String
 ) {
   companion object {
-    val BLANK = LoginModel("", "")
+    val BLANK = LoginModel(Email(""), "")
   }
 
   fun emailChanged(email: String): LoginModel {
-    return copy(email = email)
+    return copy(email = Email(email))
   }
 
   fun passwordChanged(password: String): LoginModel {
