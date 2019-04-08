@@ -1,16 +1,19 @@
 package io.redgreen.benchpress.github
 
+import android.os.Parcelable
 import io.redgreen.benchpress.architecture.AsyncOp
 import io.redgreen.benchpress.architecture.AsyncOp.*
 import io.redgreen.benchpress.github.GitHubModel.UsernamePresence.*
 import io.redgreen.benchpress.github.domain.User
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class GitHubModel(
     val username: String,
     val fetchFollowersAsyncOp: AsyncOp = IDLE,
     val followers: List<User> = emptyList(),
     val usernamePresence: UsernamePresence = UNKNOWN
-) {
+) : Parcelable {
     val canSearch: Boolean
         get() {
             return username.isNotBlank()
