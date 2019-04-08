@@ -1,6 +1,7 @@
 package io.redgreen.benchpress.login
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 
 object LoginLogic : Update<LoginModel, LoginEvent, LoginEffect> {
@@ -9,12 +10,12 @@ object LoginLogic : Update<LoginModel, LoginEvent, LoginEffect> {
     event: LoginEvent
   ): Next<LoginModel, LoginEffect> {
     return when (event) {
-      is EmailChangedEvent -> Next.next(model.emailChanged(event.email))
-      is PasswordChangedEvent -> Next.next(model.passwordChanged(event.password))
-      is AttemptLoginEvent -> Next.next(model.attemptLogin(), setOf(AttemptLoginEffect))
-      is UserAuthenticatedEvent -> Next.next(model.userAuthenticated(), setOf(GoToHomeEffect(event.token)))
-      is UserAuthenticationFailEvent -> Next.next(model.userAuthenticationFail())
-      else -> TODO("Unknown event: $event")
+      is EmailChangedEvent -> next(model.emailChanged(event.email))
+      is PasswordChangedEvent -> next(model.passwordChanged(event.password))
+      is AttemptLoginEvent -> next(model.attemptLogin(), setOf(AttemptLoginEffect))
+      is UserAuthenticatedEvent -> next(model.userAuthenticated(), setOf(GoToHomeEffect(event.token)))
+      is UserAuthenticationFailEvent -> next(model.userAuthenticationFailed())
+      is UnknownFailureEvent -> next(model.unknownFailure())
     }
   }
 }

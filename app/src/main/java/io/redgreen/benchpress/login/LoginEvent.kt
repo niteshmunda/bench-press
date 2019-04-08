@@ -18,3 +18,4 @@ data class UserAuthenticatedEvent(
 
 object UserAuthenticationFailEvent : LoginEvent()
 
+object UnknownFailureEvent : LoginEvent()

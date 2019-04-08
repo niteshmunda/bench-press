@@ -75,17 +75,16 @@ class LoginLogicTest {
 
   @Test
   fun `when login is fails, then user stays on screen`() {
-
     val loggingInLoginModel = blankModel
       .emailChanged(email)
       .passwordChanged(password)
       .attemptLogin()
 
     updateSpec.given(loggingInLoginModel)
-      .`when`(UserAuthenticationFailEvent)
+      .`when`(UnknownFailureEvent)
       .then(
         assertThatNext(
-          hasModel(loggingInLoginModel.userAuthenticationFail()),
+          hasModel(loggingInLoginModel.unknownFailure()),
           hasNoEffects()
         )
       )

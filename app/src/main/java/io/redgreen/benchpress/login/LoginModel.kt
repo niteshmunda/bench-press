@@ -3,12 +3,15 @@ package io.redgreen.benchpress.login
 import io.redgreen.benchpress.login.domain.AsyncOp
 import io.redgreen.benchpress.login.domain.AsyncOp.*
 import io.redgreen.benchpress.login.domain.Email
+import io.redgreen.benchpress.login.domain.LoginError
+import io.redgreen.benchpress.login.domain.LoginError.*
 import io.redgreen.benchpress.login.domain.Password
 
 data class LoginModel(
   val email: Email,
   val password: Password,
-  val loggingInAsyncOp: AsyncOp = IDLE
+  val loggingInAsyncOp: AsyncOp = IDLE,
+  val loginError: LoginError = NONE
 ) {
   companion object {
     val BLANK = LoginModel(Email(""), Password(""))
@@ -26,15 +29,18 @@ data class LoginModel(
   }
 
   fun attemptLogin(): LoginModel {
-    return copy(loggingInAsyncOp = IN_PROGRESS)
+    return copy(loggingInAsyncOp = IN_PROGRESS, loginError = NONE)
   }
 
   fun userAuthenticated(): LoginModel {
     return copy(loggingInAsyncOp = SUCCEEDED)
   }
 
+  fun userAuthenticationFailed(): LoginModel {
+    return copy(loggingInAsyncOp = FAILED, loginError = AUTHENTICATION)
+  }
 
-  fun userAuthenticationFail(): LoginModel {
-    return copy(loggingInAsyncOp = FAILED)
+  fun unknownFailure(): LoginModel {
+    return copy(loggingInAsyncOp = FAILED, loginError = UNKNOWN)
   }
 }
