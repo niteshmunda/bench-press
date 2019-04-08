@@ -1,5 +1,5 @@
 package io.redgreen.benchpress.login
 
-class LoginEffect {
+sealed class LoginEffect
 
-}
+object AttemptLoginEffect : LoginEffect()

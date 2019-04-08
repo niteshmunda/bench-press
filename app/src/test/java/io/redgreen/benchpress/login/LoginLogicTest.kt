@@ -1,7 +1,6 @@
 package io.redgreen.benchpress.login
 
-import com.spotify.mobius.test.NextMatchers.hasModel
-import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.*
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -9,11 +8,11 @@ import org.junit.Test
 class LoginLogicTest {
   private val updateSpec = UpdateSpec<LoginModel, LoginEvent, LoginEffect>(LoginLogic::update)
   private val blankModel = LoginModel.BLANK
+  private val email = "nainesh@dunzo.in"
+  private val password = "some-secret-password"
 
   @Test
   fun `when user changes email, then update email`() {
-    val email = "nainesh@dunzo.in"
-
     updateSpec
       .given(blankModel)
       .`when`(EmailChangedEvent(email))
@@ -27,8 +26,6 @@ class LoginLogicTest {
 
   @Test
   fun `when user changes password, then update password`() {
-    val password = "some-secret-password"
-
     updateSpec
       .given(blankModel)
       .`when`(PasswordChangedEvent(password))
@@ -36,6 +33,23 @@ class LoginLogicTest {
         assertThatNext(
           hasModel(blankModel.passwordChanged(password)),
           hasNoEffects()
+        )
+      )
+  }
+
+  @Test
+  fun `when model is ready for login, then user can make a network call`() {
+    val readyForLoginModel = blankModel
+      .emailChanged(email)
+      .passwordChanged(password)
+
+    updateSpec
+      .given(readyForLoginModel)
+      .`when`(AttemptLoginEvent)
+      .then(
+        assertThatNext(
+          hasModel(readyForLoginModel.attemptLogin()),
+          hasEffects(AttemptLoginEffect as LoginEffect)
         )
       )
   }

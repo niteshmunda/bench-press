@@ -9,3 +9,5 @@ data class EmailChangedEvent(
 data class PasswordChangedEvent(
   val password: String
 ) : LoginEvent()
+
+object AttemptLoginEvent : LoginEvent()

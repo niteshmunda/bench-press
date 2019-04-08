@@ -5,7 +5,8 @@ import io.redgreen.benchpress.login.domain.Password
 
 data class LoginModel(
   val email: Email,
-  val password: Password
+  val password: Password,
+  val loggingIn: Boolean = false
 ) {
   companion object {
     val BLANK = LoginModel(Email(""), Password(""))
@@ -20,5 +21,9 @@ data class LoginModel(
 
   fun passwordChanged(password: String): LoginModel {
     return copy(password = Password(password))
+  }
+
+  fun attemptLogin(): LoginModel {
+    return copy(loggingIn = true)
   }
 }

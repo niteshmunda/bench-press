@@ -8,12 +8,11 @@ object LoginLogic : Update<LoginModel, LoginEvent, LoginEffect> {
     model: LoginModel,
     event: LoginEvent
   ): Next<LoginModel, LoginEffect> {
-    if (event is EmailChangedEvent) {
-      return Next.next(model.emailChanged(event.email))
-    } else if (event is PasswordChangedEvent) {
-      return Next.next(model.passwordChanged(event.password))
+    return when (event) {
+      is EmailChangedEvent -> Next.next(model.emailChanged(event.email))
+      is PasswordChangedEvent -> Next.next(model.passwordChanged(event.password))
+      is AttemptLoginEvent -> Next.next(model.attemptLogin(), setOf(AttemptLoginEffect))
+      else -> TODO("Unknown event: $event")
     }
-
-    TODO("Unknown event: $event")
   }
 }
