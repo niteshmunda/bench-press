@@ -13,6 +13,7 @@ object LoginLogic : Update<LoginModel, LoginEvent, LoginEffect> {
       is PasswordChangedEvent -> Next.next(model.passwordChanged(event.password))
       is AttemptLoginEvent -> Next.next(model.attemptLogin(), setOf(AttemptLoginEffect))
       is UserAuthenticatedEvent -> Next.next(model.userAuthenticated(), setOf(GoToHomeEffect(event.token)))
+      is UserAuthenticationFailEvent -> Next.next(model.userAuthenticationFail())
       else -> TODO("Unknown event: $event")
     }
   }

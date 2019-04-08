@@ -32,4 +32,9 @@ data class LoginModel(
   fun userAuthenticated(): LoginModel {
     return copy(loggingInAsyncOp = SUCCEEDED)
   }
+
+
+  fun userAuthenticationFail(): LoginModel {
+    return copy(loggingInAsyncOp = FAILED)
+  }
 }

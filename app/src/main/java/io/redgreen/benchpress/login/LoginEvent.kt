@@ -15,3 +15,6 @@ object AttemptLoginEvent : LoginEvent()
 data class UserAuthenticatedEvent(
   val token: String
 ) : LoginEvent()
+
+object UserAuthenticationFailEvent : LoginEvent()
+
