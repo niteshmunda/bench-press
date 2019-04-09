@@ -9,21 +9,20 @@ import io.redgreen.benchpress.test.EffectHandlerTestCase
 import org.junit.Test
 
 class GitHubEffectHandlerTest {
+    private val gitHubApi = mock<GitHubApi>()
+    private val username = "jakewharton"
+    private val effectHandler = GitHubEffectHandler.createHandler(gitHubApi)
+    private val testCase = EffectHandlerTestCase(effectHandler)
+
     @Test
     fun `when fetch followers has followers, then dispatch followers fetched event`() {
-        // given - API
-        val gitHubApi = mock<GitHubApi>()
+        // given
+        val fetchFollowersEffect = FetchFollowersEffect(username)
         val followers = listOf(
             User("nitesh", "https://imagekit.io/nitesh.png")
         )
-        val username = "jakewharton"
         whenever(gitHubApi.getFollowers(username))
             .thenReturn(Single.just(followers))
-
-        // given - Effect Handler
-        val fetchFollowersEffect = FetchFollowersEffect(username)
-        val effectHandler = GitHubEffectHandler.createHandler(gitHubApi)
-        val testCase = EffectHandlerTestCase(effectHandler)
 
         // when
         testCase.dispatchEffect(fetchFollowersEffect)
@@ -32,4 +31,18 @@ class GitHubEffectHandlerTest {
         testCase.assertOutgoingEvents(FollowersFetchedEvent(followers))
     }
 
+    @Test
+    fun `when fetch followers has no followers, then dispatch no followers event`() {
+        // given
+        val fetchFollowersEffect = FetchFollowersEffect(username)
+        val noFollowers = emptyList<User>()
+        whenever(gitHubApi.getFollowers(username))
+            .thenReturn(Single.just(noFollowers))
+
+        // when
+        testCase.dispatchEffect(fetchFollowersEffect)
+
+        // then
+        testCase.assertOutgoingEvents(NoFollowersEvent)
+    }
 }

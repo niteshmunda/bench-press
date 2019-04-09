@@ -23,7 +23,7 @@ object GitHubEffectHandler {
             override fun apply(fetchFollowersEffects: Observable<FetchFollowersEffect>): ObservableSource<GitHubEvent> {
                 return fetchFollowersEffects
                     .flatMapSingle { gitHubApi.getFollowers(it.username) }
-                    .map { followers -> FollowersFetchedEvent(followers) }
+                    .map { followers -> if (followers.isEmpty()) NoFollowersEvent else FollowersFetchedEvent(followers) }
             }
         }
     }

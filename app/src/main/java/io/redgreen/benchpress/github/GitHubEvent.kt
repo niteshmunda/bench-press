@@ -10,6 +10,8 @@ data class UsernameChangedEvent(
 
 object UsernameClearedEvent : GitHubEvent()
 
+object RetryFetchFollowersEvent : GitHubEvent()
+
 data class FetchFollowersEvent(
     val username: String
 ) : GitHubEvent()
@@ -23,5 +25,3 @@ object NoFollowersEvent : GitHubEvent()
 object FollowersFetchFailedEvent : GitHubEvent()
 
 object UsernameNotFoundEvent : GitHubEvent()
-
-object RetryFetchFollowersEvent : GitHubEvent()
