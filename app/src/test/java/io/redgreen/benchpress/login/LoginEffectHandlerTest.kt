@@ -45,7 +45,6 @@ class LoginEffectHandlerTest {
 
     @Test
     fun `when login api fails, then dispatch failed event`() {
-
         // Simulate failed api response.
         whenever(apiMock.login(LoginRequest(email, password)))
             .thenReturn(Single.error {ClearFieldsEffect
@@ -79,7 +78,6 @@ class LoginEffectHandlerTest {
 
     @Test
     fun `when login response save fails, then user can retry`() {
-
         val token = "token"
 
         whenever(dbMock.saveToken(token)).
