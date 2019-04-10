@@ -22,7 +22,7 @@ class GitHubViewRenderer(private val view: GitHubView) {
         else if (model.fetchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.hasFollowers) {
             view.enableUsernameTextView()
             view.hideProgress()
-            view.showFollowers()
+            view.showFollowers(model.followers)
             view.enableSearchButton()
         }
 

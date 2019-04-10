@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import io.redgreen.benchpress.R
 import io.redgreen.benchpress.bmi.BmiActivity
 import io.redgreen.benchpress.counter.CounterActivity
+import io.redgreen.benchpress.github.GitHubActivity
 import io.redgreen.benchpress.hellostranger.HelloStrangerActivity
 import io.redgreen.benchpress.imagepicker.ImagePickerActivity
 import io.redgreen.benchpress.login.LoginActivity
@@ -27,6 +28,7 @@ class LaunchpadActivity : AppCompatActivity() {
 
   private val examples by lazy(NONE) {
     listOf(
+      Example(getString(R.string.github_title)) { context -> GitHubActivity.start(context) },
       Example(getString(R.string.counter_title)) { context -> CounterActivity.start(context) },
       Example(getString(R.string.hello_stranger_title)) { context -> HelloStrangerActivity.start(context) },
       Example(getString(R.string.bmi_title)) { context -> BmiActivity.start(context) },

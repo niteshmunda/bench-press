@@ -13,7 +13,7 @@ object UsernameClearedEvent : GitHubEvent()
 object RetryFetchFollowersEvent : GitHubEvent()
 
 data class FetchFollowersEvent(
-    val username: String
+    val username: String // FIXME This is redundant, this doesn't have to be passed externally.
 ) : GitHubEvent()
 
 data class FollowersFetchedEvent(
@@ -24,4 +24,4 @@ object NoFollowersEvent : GitHubEvent()
 
 object FollowersFetchFailedEvent : GitHubEvent()
 
-object UsernameNotFoundEvent : GitHubEvent() // Single.error() - Use a HttpException with a real JSON response.
+object UsernameNotFoundEvent : GitHubEvent()

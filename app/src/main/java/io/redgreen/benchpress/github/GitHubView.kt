@@ -1,5 +1,7 @@
 package io.redgreen.benchpress.github
 
+import io.redgreen.benchpress.github.domain.User
+
 interface GitHubView {
     fun disableSearchButton()
     fun hideFollowers()
@@ -10,7 +12,7 @@ interface GitHubView {
     fun enableSearchButton()
     fun disableUsernameTextView()
     fun showProgress()
-    fun showFollowers()
+    fun showFollowers(followers: List<User>)
     fun hideProgress()
     fun showNoFollowersMessage()
     fun showRetryMessage()

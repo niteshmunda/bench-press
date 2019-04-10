@@ -22,9 +22,10 @@
 
   <string name="image_picker_title">Image Picker</string>
   <string name="quiz_title">Quiz</string>
-    <string name="invalid_email">Invaild Email</string>
+  <string name="github_title">GitHub Followers</string>
+  <string name="invalid_email">Invaild Email</string>
   <string name="invalid_password">Invalid String</string>
-    <string name="login_text">login</string>
+  <string name="login_text">login</string>
   <string name="network_error">network error</string>
   <string name="login_retry">retry login</string>
 </resources>
