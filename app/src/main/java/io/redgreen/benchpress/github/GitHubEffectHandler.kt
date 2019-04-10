@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.redgreen.benchpress.github.http.GitHubApi
+import retrofit2.HttpException
 
 object GitHubEffectHandler {
     fun createHandler(
@@ -24,8 +25,19 @@ object GitHubEffectHandler {
                 return fetchFollowersEffects
                     .flatMapSingle { gitHubApi.getFollowers(it.username) }
                     .map { followers -> if (followers.isEmpty()) NoFollowersEvent else FollowersFetchedEvent(followers) }
-                    .onErrorReturn { FollowersFetchFailedEvent }
+                    .onErrorReturn { mapToDomainErrorEvent(it) }
             }
         }
     }
+
+    private fun mapToDomainErrorEvent(throwable: Throwable): GitHubEvent {
+        return if (throwable is HttpException && isUsernameNotFoundException(throwable)) {
+            UsernameNotFoundEvent
+        } else {
+            FollowersFetchFailedEvent
+        }
+    }
+
+    private fun isUsernameNotFoundException(exception: HttpException): Boolean =
+        exception.code() == 404
 }

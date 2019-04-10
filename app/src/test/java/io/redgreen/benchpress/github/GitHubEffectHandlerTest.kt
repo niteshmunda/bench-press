@@ -6,7 +6,11 @@ import io.reactivex.Single
 import io.redgreen.benchpress.github.domain.User
 import io.redgreen.benchpress.github.http.GitHubApi
 import io.redgreen.benchpress.test.EffectHandlerTestCase
+import okhttp3.MediaType
+import okhttp3.ResponseBody
 import org.junit.Test
+import retrofit2.HttpException
+import retrofit2.Response
 
 class GitHubEffectHandlerTest {
     private val gitHubApi = mock<GitHubApi>()
@@ -56,5 +60,37 @@ class GitHubEffectHandlerTest {
 
         // then
         testCase.assertOutgoingEvents(FollowersFetchFailedEvent)
+    }
+
+    @Test
+    fun `when user is not found, then dispatch username not found event`() {
+        // given
+        val nonExistentUsername = "phantom-user"
+        val usernameNotFoundException = getUsernameNotFoundException()
+        whenever(gitHubApi.getFollowers(nonExistentUsername))
+            .thenReturn(Single.error(usernameNotFoundException))
+
+        // when
+        testCase.dispatchEffect(FetchFollowersEffect(nonExistentUsername))
+
+        // then
+        testCase.assertOutgoingEvents(UsernameNotFoundEvent)
+    }
+
+    private fun getUsernameNotFoundException(): HttpException {
+        val usernameNotFoundContent = """
+            {
+                "message": "Not Found",
+                "documentation_url": "https://developer.github.com/v3/users/followers/#list-followers-of-a-user"
+            }
+        """.trimIndent()
+        val usernameNotFoundError = Response.error<Any>(
+            404,
+            ResponseBody.create(
+                MediaType.parse("application/json"),
+                usernameNotFoundContent
+            )
+        )
+        return HttpException(usernameNotFoundError)
     }
 }
