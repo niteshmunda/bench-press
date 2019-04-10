@@ -24,6 +24,7 @@ object GitHubEffectHandler {
                 return fetchFollowersEffects
                     .flatMapSingle { gitHubApi.getFollowers(it.username) }
                     .map { followers -> if (followers.isEmpty()) NoFollowersEvent else FollowersFetchedEvent(followers) }
+                    .onErrorReturn { FollowersFetchFailedEvent }
             }
         }
     }

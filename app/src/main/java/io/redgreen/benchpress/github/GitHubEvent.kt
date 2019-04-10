@@ -24,4 +24,4 @@ object NoFollowersEvent : GitHubEvent()
 
 object FollowersFetchFailedEvent : GitHubEvent()
 
-object UsernameNotFoundEvent : GitHubEvent()
+object UsernameNotFoundEvent : GitHubEvent() // Single.error() - Use a HttpException with a real JSON response.
