@@ -12,7 +12,7 @@ object GitHubLogic : Update<GitHubModel, GitHubEvent, GitHubEffect> {
         return when (event) {
             is UsernameChangedEvent -> next(model.usernameChanged(event.username))
             is UsernameClearedEvent -> next(GitHubModel.EMPTY)
-            is FetchFollowersEvent -> next(model.fetchingFollowers(), setOf(FetchFollowersEffect(event.username)))
+            is FetchFollowersEvent -> next(model.fetchingFollowers(), setOf(FetchFollowersEffect(model.username)))
             is FollowersFetchedEvent -> next(model.followersFetchedSuccess(event.followers))
             is NoFollowersEvent -> next(model.noFollowers())
             is FollowersFetchFailedEvent -> next(model.followersFetchFailed())

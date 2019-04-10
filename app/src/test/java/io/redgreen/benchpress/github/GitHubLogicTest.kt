@@ -47,7 +47,7 @@ class GitHubLogicTest {
 
         updateSpec
             .given(hasUsernameModel)
-            .`when`(FetchFollowersEvent(username))
+            .`when`(FetchFollowersEvent)
             .then(
                 assertThatNext(
                     hasModel(hasUsernameModel.fetchingFollowers()),

@@ -70,7 +70,7 @@ class GitHubViewRendererTest {
         // then
         verify(view).enableSearchButton()
         verify(view).enableUsernameTextView()
-        verify(view).showFollowers(model.followers)
+        verify(view).showFollowers(followers)
         verify(view).hideProgress()
 
         verifyNoMoreInteractions(view)

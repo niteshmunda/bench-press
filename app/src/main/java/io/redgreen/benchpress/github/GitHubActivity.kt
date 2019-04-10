@@ -53,7 +53,7 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
                 eventSource.notifyEvent(usernameEvent)
             }
         })
-        search_button.setOnClickListener { eventSource.notifyEvent(FetchFollowersEvent(username_text.text.toString())) }
+        search_button.setOnClickListener { eventSource.notifyEvent(FetchFollowersEvent) }
     }
 
     override fun initialModel(): GitHubModel {
