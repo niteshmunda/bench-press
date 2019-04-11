@@ -31,12 +31,17 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
     private val gitHubApi by lazy(NONE) {
         object : GitHubApi {
             override fun getFollowers(username: String): Single<List<User>> {
-                return Single.just(
-                    listOf(
-                        User("nitesh", "some-url"),
-                        User("ragunath", "some-other-url")
+                return when (username) {
+                    "no_follower_username" -> Single.just(emptyList())
+                    "not_found_username" -> Single.error(RuntimeException("Username Not Found"))
+                    "valid_username" -> Single.just(
+                        listOf(
+                            User("nitesh", "https://picsum.photos/200/300?image=0\n"),
+                            User("ragunath", "https://picsum.photos/200/300?image=0\n")
+                        )
                     )
-                )
+                    else -> Single.error(RuntimeException("Api Fetch Failed"))
+                }
             }
         }
     }
@@ -77,12 +82,20 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
         return GitHubEffectHandler.createHandler(gitHubApi)
     }
 
+    override fun showWelcomeMessage() {
+        search_something_text.visibility = View.VISIBLE
+    }
+
+    override fun hideWelcomeMessage() {
+        search_something_text.visibility = View.INVISIBLE
+    }
+
     override fun disableSearchButton() {
         search_button.isEnabled = false
     }
 
     override fun hideFollowers() {
-        list_item.visibility = View.INVISIBLE
+        followersListView.visibility = View.INVISIBLE
     }
 
     override fun enableUsernameTextView() {
@@ -116,8 +129,7 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
     }
 
     override fun showFollowers(followers: List<User>) {
-        list_item.visibility = View.VISIBLE
-        // TODO Implement the adapter!
+        followersListView.adapter = CustomListAdapter(this, followers)
     }
 
     override fun hideProgress() {

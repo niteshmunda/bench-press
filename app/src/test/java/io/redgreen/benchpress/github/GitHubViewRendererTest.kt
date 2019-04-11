@@ -23,6 +23,7 @@ class GitHubViewRendererTest {
         verify(view).hideNoFollowersMessage()
         verify(view).hideRetryMessage()
         verify(view).hideUsernameNotFoundMessage()
+        verify(view).showWelcomeMessage()
 
         verifyNoMoreInteractions(view)
     }
@@ -54,6 +55,7 @@ class GitHubViewRendererTest {
         verify(view).disableUsernameTextView()
         verify(view).showProgress()
         verify(view).hideRetryMessage()
+        verify(view).hideWelcomeMessage()
 
         verifyNoMoreInteractions(view)
     }

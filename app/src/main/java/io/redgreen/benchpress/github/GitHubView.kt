@@ -17,4 +17,6 @@ interface GitHubView {
     fun showNoFollowersMessage()
     fun showRetryMessage()
     fun showUsernameNotFoundMessage()
+    fun showWelcomeMessage()
+    fun hideWelcomeMessage()
 }

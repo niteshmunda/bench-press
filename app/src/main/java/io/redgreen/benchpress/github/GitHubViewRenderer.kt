@@ -4,7 +4,6 @@ import io.redgreen.benchpress.architecture.AsyncOp
 
 class GitHubViewRenderer(private val view: GitHubView) {
     fun render(model: GitHubModel) {
-
         if (model.fetchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.usernamePresence == GitHubModel.UsernamePresence.NOT_FOUND) {
             view.enableSearchButton()
             view.enableUsernameTextView()
@@ -38,6 +37,7 @@ class GitHubViewRenderer(private val view: GitHubView) {
             view.disableUsernameTextView()
             view.showProgress()
             view.hideRetryMessage()
+            view.hideWelcomeMessage()
         }
 
         else if (model.canSearch && model.fetchFollowersAsyncOp == AsyncOp.IDLE) {
@@ -51,6 +51,7 @@ class GitHubViewRenderer(private val view: GitHubView) {
             view.hideNoFollowersMessage()
             view.hideRetryMessage()
             view.hideUsernameNotFoundMessage()
+            view.showWelcomeMessage()
         }
     }
 }
