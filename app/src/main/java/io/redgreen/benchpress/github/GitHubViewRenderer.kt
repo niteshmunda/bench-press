@@ -1,57 +1,88 @@
 package io.redgreen.benchpress.github
 
 import io.redgreen.benchpress.architecture.AsyncOp
+import io.redgreen.benchpress.github.domain.User
 
 class GitHubViewRenderer(private val view: GitHubView) {
     fun render(model: GitHubModel) {
         if (model.fetchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.usernamePresence == GitHubModel.UsernamePresence.NOT_FOUND) {
-            view.enableSearchButton()
-            view.enableUsernameTextView()
-            view.hideProgress()
-            view.showUsernameNotFoundMessage()
+            showUserNotFound()
+        } else if (model.fetchFollowersAsyncOp == AsyncOp.FAILED) {
+            showUnknownError()
+        } else if (model.fetchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.hasFollowers) {
+            showFollowers(model.followers)
+        } else if (model.fetchFollowersAsyncOp == AsyncOp.SUCCEEDED && !model.hasFollowers) {
+            showNoFollowersFound()
+        } else if (model.fetchFollowersAsyncOp == AsyncOp.IN_FLIGHT) {
+            showLoading()
+        } else if (model.canSearch && model.fetchFollowersAsyncOp == AsyncOp.IDLE) {
+            showReadyToFetchFollowers()
+        } else if (!model.canSearch && model.fetchFollowersAsyncOp == AsyncOp.IDLE) {
+            showEmpty()
         }
+    }
 
-        else if (model.fetchFollowersAsyncOp == AsyncOp.FAILED) {
-            view.enableUsernameTextView()
-            view.enableSearchButton()
-            view.hideProgress()
-            view.showRetryMessage()
+    private fun showEmpty() {
+        with(view) {
+            disableSearchButton()
+            hideFollowers()
+            enableUsernameTextView()
+            hideNoFollowersMessage()
+            hideRetryMessage()
+            hideUsernameNotFoundMessage()
+            showWelcomeMessage()
         }
+    }
 
-        else if (model.fetchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.hasFollowers) {
-            view.enableUsernameTextView()
-            view.hideProgress()
-            view.showFollowers(model.followers)
-            view.enableSearchButton()
+    private fun showReadyToFetchFollowers() {
+        view.enableSearchButton()
+    }
+
+    private fun showLoading() {
+        with(view) {
+            disableSearchButton()
+            disableUsernameTextView()
+            showProgress()
+            hideRetryMessage()
+            hideWelcomeMessage()
         }
+    }
 
-        else if (model.fetchFollowersAsyncOp == AsyncOp.SUCCEEDED && !model.hasFollowers) {
-            view.enableUsernameTextView()
-            view.enableSearchButton()
-            view.hideProgress()
-            view.showNoFollowersMessage()
+    private fun showFollowers(
+        followers: List<User>
+    ) {
+        with(view) {
+            enableUsernameTextView()
+            hideProgress()
+            showFollowers(followers)
+            enableSearchButton()
         }
+    }
 
-        else if (model.fetchFollowersAsyncOp == AsyncOp.IN_FLIGHT) {
-            view.disableSearchButton()
-            view.disableUsernameTextView()
-            view.showProgress()
-            view.hideRetryMessage()
-            view.hideWelcomeMessage()
+    private fun showUserNotFound() {
+        with(view) {
+            enableSearchButton()
+            enableUsernameTextView()
+            hideProgress()
+            showUsernameNotFoundMessage()
         }
+    }
 
-        else if (model.canSearch && model.fetchFollowersAsyncOp == AsyncOp.IDLE) {
-            view.enableSearchButton()
+    private fun showNoFollowersFound() {
+        with(view) {
+            enableUsernameTextView()
+            enableSearchButton()
+            hideProgress()
+            showNoFollowersMessage()
         }
+    }
 
-        else if (!model.canSearch && model.fetchFollowersAsyncOp == AsyncOp.IDLE) {
-            view.disableSearchButton()
-            view.hideFollowers()
-            view.enableUsernameTextView()
-            view.hideNoFollowersMessage()
-            view.hideRetryMessage()
-            view.hideUsernameNotFoundMessage()
-            view.showWelcomeMessage()
+    private fun showUnknownError() {
+        with(view) {
+            enableUsernameTextView()
+            enableSearchButton()
+            hideProgress()
+            showRetryMessage()
         }
     }
 }
