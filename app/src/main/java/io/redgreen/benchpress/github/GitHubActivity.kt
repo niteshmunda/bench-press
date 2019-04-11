@@ -15,6 +15,7 @@ import io.redgreen.benchpress.github.domain.User
 import io.redgreen.benchpress.github.http.GitHubApi
 import kotlinx.android.synthetic.main.github_followers_layout.*
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import kotlin.LazyThreadSafetyMode.NONE
 
 class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), GitHubView {
@@ -31,17 +32,22 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
     private val gitHubApi by lazy(NONE) {
         object : GitHubApi {
             override fun getFollowers(username: String): Single<List<User>> {
-                return when (username) {
-                    "no_follower_username" -> Single.just(emptyList())
-                    "not_found_username" -> Single.error(RuntimeException("Username Not Found"))
-                    "valid_username" -> Single.just(
+                val response = when (username) {
+                    "lonely" -> Single.just(emptyList())
+
+                    "nobody" -> Single.error(RuntimeException("Username Not Found")) // <!-- HTTP Exception with JSON body
+
+                    "nitesh" -> Single.just(
                         listOf(
                             User("nitesh", "https://picsum.photos/200/300?image=0\n"),
                             User("ragunath", "https://picsum.photos/200/300?image=0\n")
                         )
                     )
+
                     else -> Single.error(RuntimeException("Api Fetch Failed"))
                 }
+
+                return response.delay(1500, TimeUnit.MILLISECONDS)
             }
         }
     }
@@ -129,6 +135,7 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
     }
 
     override fun showFollowers(followers: List<User>) {
+        followersListView.visibility = View.VISIBLE
         followersListView.adapter = CustomListAdapter(this, followers)
     }
 

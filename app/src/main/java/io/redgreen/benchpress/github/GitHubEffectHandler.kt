@@ -23,9 +23,12 @@ object GitHubEffectHandler {
         return object : ObservableTransformer<FetchFollowersEffect, GitHubEvent> {
             override fun apply(fetchFollowersEffects: Observable<FetchFollowersEffect>): ObservableSource<GitHubEvent> {
                 return fetchFollowersEffects
-                    .flatMapSingle { gitHubApi.getFollowers(it.username) }
-                    .map { followers -> if (followers.isEmpty()) NoFollowersEvent else FollowersFetchedEvent(followers) }
-                    .onErrorReturn { mapToDomainErrorEvent(it) }
+                    .flatMapSingle {
+                        gitHubApi
+                            .getFollowers(it.username)
+                            .map { followers -> if (followers.isEmpty()) NoFollowersEvent else FollowersFetchedEvent(followers) }
+                            .onErrorReturn(::mapToDomainErrorEvent)
+                    }
             }
         }
     }
