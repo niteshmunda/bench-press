@@ -65,6 +65,7 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
             }
         })
         search_button.setOnClickListener { eventSource.notifyEvent(FetchFollowersEvent) }
+        retry_button.setOnClickListener { eventSource.notifyEvent(RetryFetchFollowersEvent) }
     }
 
     override fun initialModel(): GitHubModel {
