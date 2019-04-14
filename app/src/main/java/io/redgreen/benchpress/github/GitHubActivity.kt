@@ -5,6 +5,7 @@ import android.content.Intent
 import android.text.Editable
 import android.util.Log
 import android.view.View
+import arrow.core.success
 import com.spotify.mobius.Next
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
@@ -12,8 +13,14 @@ import io.redgreen.benchpress.R
 import io.redgreen.benchpress.architecture.android.BaseActivity
 import io.redgreen.benchpress.architecture.android.listener.TextWatcherAdapter
 import io.redgreen.benchpress.github.domain.User
+import io.redgreen.benchpress.github.http.ErrorResponse
 import io.redgreen.benchpress.github.http.GitHubApi
 import kotlinx.android.synthetic.main.github_followers_layout.*
+import okhttp3.MediaType
+import okhttp3.ResponseBody
+import org.json.JSONObject
+import retrofit2.HttpException
+import retrofit2.Response
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.LazyThreadSafetyMode.NONE
@@ -35,7 +42,7 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
                 val response = when (username) {
                     "lonely" -> Single.just(emptyList())
 
-                    "nobody" -> Single.error(RuntimeException("Username Not Found")) // <!-- HTTP Exception with JSON body
+                    "nobody" -> Single.error(httpException())
 
                     "nitesh" -> Single.just(
                         listOf(
@@ -50,6 +57,23 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
                 return response.delay(1500, TimeUnit.MILLISECONDS)
             }
         }
+    }
+
+    private fun httpException(): HttpException {
+        val errorResponse =  """
+            {
+                "message" : "Not Found",
+                "documentation_url": "https://developer.github.com/v3/users/followers/#list-followers-of-a-user"
+            }
+        """.trimIndent()
+        val response = Response.error<Any> (
+            404,
+            ResponseBody.create(
+                MediaType.parse("application/json"),
+                errorResponse
+            )
+        )
+        return HttpException(response)
     }
 
     override fun layoutResId(): Int {
