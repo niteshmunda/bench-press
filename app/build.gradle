@@ -53,6 +53,9 @@ dependencies {
     implementation "com.spotify.mobius:mobius-rx2:1.2.0"
     implementation "com.spotify.mobius:mobius-extras:1.2.0"
 
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
     // OkHttp
     implementation "com.squareup.okhttp3:logging-interceptor:3.14.1"
 
