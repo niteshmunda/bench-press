@@ -5,24 +5,22 @@ import android.content.Intent
 import android.text.Editable
 import android.util.Log
 import android.view.View
-import arrow.core.success
 import com.spotify.mobius.Next
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.redgreen.benchpress.R
 import io.redgreen.benchpress.architecture.android.BaseActivity
 import io.redgreen.benchpress.architecture.android.listener.TextWatcherAdapter
+import io.redgreen.benchpress.architecture.threading.DefaultSchedulersProvider
 import io.redgreen.benchpress.github.domain.User
-import io.redgreen.benchpress.github.http.ErrorResponse
 import io.redgreen.benchpress.github.http.GitHubApi
 import kotlinx.android.synthetic.main.github_followers_layout.*
-import okhttp3.MediaType
-import okhttp3.ResponseBody
-import org.json.JSONObject
-import retrofit2.HttpException
-import retrofit2.Response
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import kotlin.LazyThreadSafetyMode.NONE
 
 class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), GitHubView {
@@ -36,44 +34,22 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
         GitHubViewRenderer(this)
     }
 
+    private val schedulersProvider = DefaultSchedulersProvider()
+
     private val gitHubApi by lazy(NONE) {
-        object : GitHubApi {
-            override fun getFollowers(username: String): Single<List<User>> {
-                val response = when (username) {
-                    "lonely" -> Single.just(emptyList())
+        val okHttpClient = OkHttpClient
+            .Builder()
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HEADERS))
+            .build()
 
-                    "nobody" -> Single.error(httpException())
-
-                    "nitesh" -> Single.just(
-                        listOf(
-                            User("nitesh", "https://picsum.photos/200/300?image=0\n"),
-                            User("ragunath", "https://picsum.photos/200/300?image=0\n")
-                        )
-                    )
-
-                    else -> Single.error(RuntimeException("Api Fetch Failed"))
-                }
-
-                return response.delay(1500, TimeUnit.MILLISECONDS)
-            }
-        }
-    }
-
-    private fun httpException(): HttpException {
-        val errorResponse =  """
-            {
-                "message" : "Not Found",
-                "documentation_url": "https://developer.github.com/v3/users/followers/#list-followers-of-a-user"
-            }
-        """.trimIndent()
-        val response = Response.error<Any> (
-            404,
-            ResponseBody.create(
-                MediaType.parse("application/json"),
-                errorResponse
-            )
-        )
-        return HttpException(response)
+        return@lazy Retrofit
+            .Builder()
+            .baseUrl("https://api.github.com/")
+            .client(okHttpClient)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(schedulersProvider.io))
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(GitHubApi::class.java)
     }
 
     override fun layoutResId(): Int {
@@ -110,7 +86,7 @@ class GitHubActivity : BaseActivity<GitHubModel, GitHubEvent, GitHubEffect>(), G
     }
 
     override fun effectHandler(): ObservableTransformer<GitHubEffect, GitHubEvent> {
-        return GitHubEffectHandler.createHandler(gitHubApi)
+        return GitHubEffectHandler.createHandler(gitHubApi, schedulersProvider)
     }
 
     override fun showWelcomeMessage() {

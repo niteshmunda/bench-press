@@ -6,6 +6,7 @@ import io.reactivex.Single
 import io.redgreen.benchpress.github.domain.User
 import io.redgreen.benchpress.github.http.GitHubApi
 import io.redgreen.benchpress.test.EffectHandlerTestCase
+import io.redgreen.benchpress.test.ImmediateSchedulersProvider
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.Test
@@ -15,7 +16,7 @@ import retrofit2.Response
 class GitHubEffectHandlerTest {
     private val gitHubApi = mock<GitHubApi>()
     private val username = "jakewharton"
-    private val effectHandler = GitHubEffectHandler.createHandler(gitHubApi)
+    private val effectHandler = GitHubEffectHandler.createHandler(gitHubApi, ImmediateSchedulersProvider())
     private val testCase = EffectHandlerTestCase(effectHandler)
     private val fetchFollowersEffect = FetchFollowersEffect(username)
 

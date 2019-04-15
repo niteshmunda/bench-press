@@ -4,21 +4,24 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.redgreen.benchpress.architecture.threading.SchedulersProvider
 import io.redgreen.benchpress.github.http.GitHubApi
 import retrofit2.HttpException
 
 object GitHubEffectHandler {
     fun createHandler(
-        gitHubApi: GitHubApi
+        gitHubApi: GitHubApi,
+        schedulersProvider: SchedulersProvider
     ): ObservableTransformer<GitHubEffect, GitHubEvent> {
         return RxMobius
             .subtypeEffectHandler<GitHubEffect, GitHubEvent>()
-            .addTransformer(FetchFollowersEffect::class.java, fetchFollowersTransformer(gitHubApi))
+            .addTransformer(FetchFollowersEffect::class.java, fetchFollowersTransformer(gitHubApi, schedulersProvider))
             .build()
     }
 
     private fun fetchFollowersTransformer(
-        gitHubApi: GitHubApi
+        gitHubApi: GitHubApi,
+        schedulersProvider: SchedulersProvider
     ): ObservableTransformer<FetchFollowersEffect, GitHubEvent> {
         return object : ObservableTransformer<FetchFollowersEffect, GitHubEvent> {
             override fun apply(fetchFollowersEffects: Observable<FetchFollowersEffect>): ObservableSource<GitHubEvent> {
@@ -26,6 +29,7 @@ object GitHubEffectHandler {
                     .flatMapSingle {
                         gitHubApi
                             .getFollowers(it.username)
+                            .subscribeOn(schedulersProvider.io)
                             .map { followers -> if (followers.isEmpty()) NoFollowersEvent else FollowersFetchedEvent(followers) }
                             .onErrorReturn(::mapToDomainErrorEvent)
                     }
