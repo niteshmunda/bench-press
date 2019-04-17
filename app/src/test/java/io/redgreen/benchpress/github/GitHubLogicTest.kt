@@ -213,4 +213,26 @@ class GitHubLogicTest {
                 )
             )
     }
+
+    @Test
+    fun `when user changes the username, then model should reset (have default values)`() {
+        val followers = listOf(User("tom", "https://someurl.jpg/"))
+        val usernameModel = emptyModel
+            .usernameChanged("nitesh")
+            .followersFetchedSuccess(followers)
+
+        val usernameChangedModel = emptyModel
+            .usernameChanged("nite")
+
+        updateSpec
+            .given(usernameModel)
+            .`when`(UsernameChangedEvent("nite"))
+            .then(
+                assertThatNext(
+                    hasModel(usernameChangedModel),
+                    hasNoEffects()
+                )
+            )
+    }
+
 }

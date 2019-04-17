@@ -38,6 +38,12 @@ class GitHubViewRendererTest {
 
         // then
         verify(view).enableSearchButton()
+        verify(view).showWelcomeMessage()
+        verify(view).hideProgress()
+        verify(view).hideNoFollowersMessage()
+        verify(view).hideRetryMessage()
+        verify(view).hideUsernameNotFoundMessage()
+        verify(view).hideFollowers()
 
         verifyNoMoreInteractions(view)
     }
@@ -128,5 +134,4 @@ class GitHubViewRendererTest {
 
         verifyNoMoreInteractions(view)
     }
-
 }

@@ -35,7 +35,15 @@ class GitHubViewRenderer(private val view: GitHubView) {
     }
 
     private fun showReadyToFetchFollowers() {
-        view.enableSearchButton()
+        with(view) {
+            enableSearchButton()
+            showWelcomeMessage()
+            hideProgress()
+            hideRetryMessage()
+            hideFollowers()
+            hideUsernameNotFoundMessage()
+            hideNoFollowersMessage()
+        }
     }
 
     private fun showLoading() {
