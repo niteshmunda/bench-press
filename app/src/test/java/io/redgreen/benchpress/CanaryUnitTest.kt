@@ -1,12 +1,12 @@
 package io.redgreen.benchpress
 
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import org.junit.Test
 
 class CanaryUnitTest {
   @Test
   fun `test environment is setup`() {
-    assertThat(true)
-      .isTrue()
+    Truth.assertThat(true)
+        .isTrue()
   }
 }

@@ -1,5 +1,7 @@
 package io.redgreen.benchpress.launchpad
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
@@ -8,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import io.redgreen.benchpress.R
 import io.redgreen.benchpress.bmi.BmiActivity
 import io.redgreen.benchpress.counter.CounterActivity
+import io.redgreen.benchpress.github.GitHubActivity
 import io.redgreen.benchpress.hellostranger.HelloStrangerActivity
 import io.redgreen.benchpress.imagepicker.ImagePickerActivity
 import io.redgreen.benchpress.login.LoginActivity
@@ -16,8 +19,16 @@ import kotlinx.android.synthetic.main.launchpad_activity.*
 import kotlin.LazyThreadSafetyMode.NONE
 
 class LaunchpadActivity : AppCompatActivity() {
+
+  companion object {
+    fun start(context: Context) {
+      context.startActivity(Intent(context, LaunchpadActivity::class.java))
+    }
+  }
+
   private val examples by lazy(NONE) {
     listOf(
+      Example(getString(R.string.github_title)) { context -> GitHubActivity.start(context) },
       Example(getString(R.string.counter_title)) { context -> CounterActivity.start(context) },
       Example(getString(R.string.hello_stranger_title)) { context -> HelloStrangerActivity.start(context) },
       Example(getString(R.string.bmi_title)) { context -> BmiActivity.start(context) },

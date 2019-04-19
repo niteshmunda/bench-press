@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+    <EditText
+            android:id="@+id/username_text"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:hint="Username"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+    />
+
+    <Button android:id="@+id/search_button"
+            app:layout_constraintLeft_toRightOf="@id/username_text"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="20dp"
+            android:text="Search"
+            android:background="@color/colorAccent"/>
+
+    <ListView android:id="@+id/followersListView"
+              app:layout_constraintLeft_toLeftOf="@id/username_text"
+              app:layout_constraintTop_toBottomOf="@+id/username_text"
+              android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:visibility="gone">
+
+    </ListView>
+
+    <ProgressBar
+            android:id="@+id/progress"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="180dp"
+            android:layout_marginTop="350dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"/>
+
+    <TextView android:id="@+id/search_something_text"
+              app:layout_constraintLeft_toLeftOf="parent"
+              app:layout_constraintTop_toTopOf="parent"
+              android:layout_marginTop="250dp"
+              android:layout_marginLeft="100dp"
+              android:textSize="40sp"
+              android:textColor="@color/colorAccent"
+              android:layout_width="200dp" android:layout_height="200dp"
+              android:text="Search for someone you like :)"
+              tools:visibility="visible"
+              android:visibility="visible"
+    />
+
+    <TextView android:id="@+id/no_followers_text"
+              app:layout_constraintLeft_toLeftOf="parent"
+              app:layout_constraintTop_toTopOf="parent"
+              android:layout_marginTop="250dp"
+              android:layout_marginLeft="100dp"
+              android:textSize="40sp"
+              android:textColor="@color/colorAccent"
+              android:layout_width="200dp" android:layout_height="200dp"
+              android:text="No Followers Found :("
+              tools:visibility="gone"
+              android:visibility="gone"
+    />
+
+    <TextView android:id="@+id/user_not_exist_text"
+              app:layout_constraintLeft_toLeftOf="parent"
+              app:layout_constraintTop_toTopOf="parent"
+              android:layout_marginTop="250dp"
+              android:layout_marginLeft="100dp"
+              android:textSize="40sp"
+              android:textColor="@color/colorAccent"
+              android:layout_width="200dp" android:layout_height="200dp"
+              android:text="User does not Exist :("
+              tools:visibility="gone"
+              android:visibility="gone"
+    />
+
+    <LinearLayout android:id="@+id/something_went_wrong_text"
+                  android:layout_marginTop="250dp"
+                  android:layout_marginLeft="100dp"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintTop_toTopOf="parent"
+                  android:layout_width="230dp" android:layout_height="281dp"
+                  android:orientation="vertical"
+                  android:gravity="center_horizontal"
+                  tools:visibility="gone"
+                  android:visibility="gone">
+        <TextView
+                android:textSize="40sp"
+                android:textColor="@color/colorAccent"
+                android:layout_width="200dp" android:layout_height="200dp"
+                android:text="Something went wrong :("
+
+
+        />
+
+        <Button android:id="@+id/retry_button"
+                app:layout_constraintLeft_toRightOf="@id/username_text"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="20dp"
+                android:text="Retry"
+                android:layout_gravity="center"
+                android:background="@color/colorAccent"
+        />
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

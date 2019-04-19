@@ -3,6 +3,8 @@
   xmlns:tools="http://schemas.android.com/tools"
   package="io.redgreen.benchpress">
 
+  <uses-permission android:name="android.permission.INTERNET" />
+
   <application
     android:label="@string/app_name"
     android:name=".BenchPressApp"
@@ -43,5 +45,9 @@
       android:name=".quiz.QuizActivity"
       android:parentActivityName=".launchpad.LaunchpadActivity"
       android:label="@string/quiz_title" />
+    <activity
+      android:name=".github.GitHubActivity"
+      android:parentActivityName=".launchpad.LaunchpadActivity"
+      android:label="@string/github_title" />
   </application>
 </manifest>
